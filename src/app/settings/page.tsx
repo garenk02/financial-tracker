@@ -5,13 +5,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { LogoutButton } from "@/components/auth/logout-button";
 
 export default function SettingsPage() {
   return (
     <MainLayout>
       <div className="container py-8">
         <h1 className="text-3xl font-bold mb-6">Settings</h1>
-        
+
         <div className="grid gap-6 md:grid-cols-2">
           <Card>
             <CardHeader>
@@ -30,7 +31,7 @@ export default function SettingsPage() {
               <Button>Save Changes</Button>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader>
               <CardTitle>Preferences</CardTitle>
@@ -74,7 +75,7 @@ export default function SettingsPage() {
               <Button>Save Preferences</Button>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader>
               <CardTitle>Budget Settings</CardTitle>
@@ -92,7 +93,7 @@ export default function SettingsPage() {
               <Button>Update Budget</Button>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader>
               <CardTitle>Data Management</CardTitle>
@@ -111,6 +112,25 @@ export default function SettingsPage() {
                 <Label>Clear Data</Label>
                 <p className="text-sm text-muted-foreground">Delete all your financial data</p>
                 <Button variant="destructive">Clear All Data</Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Account Management</CardTitle>
+              <CardDescription>Manage your account settings</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label>Account Security</Label>
+                <p className="text-sm text-muted-foreground">Update your password or security settings</p>
+                <Button variant="outline">Change Password</Button>
+              </div>
+              <div className="space-y-2 pt-4">
+                <Label>Session</Label>
+                <p className="text-sm text-muted-foreground">Sign out from your current session</p>
+                <LogoutButton />
               </div>
             </CardContent>
           </Card>
