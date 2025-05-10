@@ -1,0 +1,28 @@
+<svg width="120" height="32" viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Logo Icon -->
+  <rect x="2" y="4" width="28" height="24" rx="4" fill="none" stroke="currentColor" stroke-width="2" />
+  <path d="M16 10V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+  <path d="M10 16H22" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+  <path d="M10 10L22 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+
+  <!-- Fin -->
+  <path d="M38 8H46V28" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M38 18H44" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+
+  <!-- Track -->
+  <path d="M52 8H60" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+  <path d="M56 8V28" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+
+  <path d="M66 8V28" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M66 8H74C76 8 78 10 78 12V14C78 16 76 18 74 18H66" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+
+  <path d="M84 8L92 28" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+  <path d="M92 8L84 28" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+
+  <path d="M98 8H106C108 8 110 10 110 12V24C110 26 108 28 106 28H98" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M98 18H106" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+  <path d="M98 8V28" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+
+  <path d="M116 8V28" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+  <path d="M116 8H118" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+</svg>
