@@ -2,8 +2,11 @@ import { MainLayout } from "@/components/main-layout";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { protectRoute } from "@/utils/auth/protected-route";
 
-export default function GoalsPage() {
+export default async function GoalsPage() {
+  // Protect this route - redirects to /auth if not authenticated
+  await protectRoute();
   return (
     <MainLayout>
       <div className="container py-8">
@@ -11,7 +14,7 @@ export default function GoalsPage() {
           <h1 className="text-3xl font-bold">Financial Goals</h1>
           <Button>Create New Goal</Button>
         </div>
-        
+
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <Card>
             <CardHeader>
@@ -33,7 +36,7 @@ export default function GoalsPage() {
               <Button>Add funds</Button>
             </CardFooter>
           </Card>
-          
+
           <Card>
             <CardHeader>
               <CardTitle>Emergency Fund</CardTitle>
@@ -54,7 +57,7 @@ export default function GoalsPage() {
               <Button>Add funds</Button>
             </CardFooter>
           </Card>
-          
+
           <Card>
             <CardHeader>
               <CardTitle>New Laptop</CardTitle>

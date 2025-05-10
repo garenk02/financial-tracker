@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { UserPlus, Eye, EyeOff } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
+import { toast } from "sonner";
 
 // Define the form schema with Zod
 const formSchema = z
@@ -40,6 +42,7 @@ export function SignUpForm({ onSuccess, onSignInClick }: SignUpFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const supabase = createClient();
 
   // Initialize the form
   const form = useForm<FormValues>({
@@ -57,18 +60,28 @@ export function SignUpForm({ onSuccess, onSignInClick }: SignUpFormProps) {
     setIsLoading(true);
 
     try {
-      // This is where you would normally call your registration API
-      console.log("Sign up data:", data);
+      const { error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options: {
+          data: {
+            full_name: data.name,
+          },
+          emailRedirectTo: `${window.location.origin}/auth/confirm`,
+        },
+      });
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
 
       // Show success message and switch to sign-in tab
-      // In a real app, you might want to automatically sign in the user
-      // or show a verification message
+      toast.success("Check your email for the confirmation link!");
       onSuccess();
     } catch (error) {
       console.error("Sign up error:", error);
+      toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }

@@ -3,8 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { protectRoute } from "@/utils/auth/protected-route";
 
-export default function TransactionsPage() {
+export default async function TransactionsPage() {
+  // Protect this route - redirects to /auth if not authenticated
+  await protectRoute();
   return (
     <MainLayout>
       <div className="container py-8">
@@ -12,14 +15,14 @@ export default function TransactionsPage() {
           <h1 className="text-3xl font-bold">Transactions</h1>
           <Button>Add Transaction</Button>
         </div>
-        
+
         <div className="mb-6">
-          <Input 
-            placeholder="Search transactions..." 
+          <Input
+            placeholder="Search transactions..."
             className="max-w-sm"
           />
         </div>
-        
+
         <Tabs defaultValue="all" className="mb-6">
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>

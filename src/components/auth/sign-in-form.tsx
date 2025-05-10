@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { LogIn, Eye, EyeOff } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
+import { toast } from "sonner";
 
 // Define the form schema with Zod
 const formSchema = z.object({
@@ -34,6 +36,7 @@ export function SignInForm({ onSuccess, onSignUpClick }: SignInFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const supabase = createClient();
 
   // Initialize the form
   const form = useForm<FormValues>({
@@ -49,19 +52,25 @@ export function SignInForm({ onSuccess, onSignUpClick }: SignInFormProps) {
     setIsLoading(true);
 
     try {
-      // This is where you would normally call your authentication API
-      console.log("Sign in data:", data);
+      const { error } = await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
+      });
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
 
       // Call the onSuccess callback
       onSuccess();
 
       // Navigate to dashboard page after successful sign-in
       router.push("/");
+      router.refresh();
     } catch (error) {
       console.error("Sign in error:", error);
+      toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }

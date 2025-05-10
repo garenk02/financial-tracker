@@ -4,25 +4,31 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
+import { toast } from "sonner";
 
 export function LogoutButton() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const supabase = createClient();
 
   const handleLogout = async () => {
     setIsLoading(true);
     
     try {
-      // This is where you would normally call your logout API
-      // For example: await fetch('/api/auth/logout', { method: 'POST' });
+      const { error } = await supabase.auth.signOut();
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
       
       // Redirect to sign-in page
       router.push("/auth");
+      router.refresh();
     } catch (error) {
       console.error("Logout error:", error);
+      toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }

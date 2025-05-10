@@ -6,8 +6,11 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LogoutButton } from "@/components/auth/logout-button";
+import { protectRoute } from "@/utils/auth/protected-route";
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  // Protect this route - redirects to /auth if not authenticated
+  await protectRoute();
   return (
     <MainLayout>
       <div className="container py-8">
