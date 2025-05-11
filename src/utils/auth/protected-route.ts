@@ -1,13 +1,13 @@
 import { redirect } from 'next/navigation'
-import { createClient } from '@/utils/supabase/server'
+import { checkAuth } from './actions'
 
 export async function protectRoute() {
-  const supabase = await createClient()
-  const { data, error } = await supabase.auth.getUser()
-  
-  if (error || !data?.user) {
+  // In Next.js 15+, we need to await the checkAuth function
+  const { user, error } = await checkAuth()
+
+  if (error || !user) {
     redirect('/auth')
   }
-  
-  return data.user
+
+  return user
 }

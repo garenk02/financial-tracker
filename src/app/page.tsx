@@ -3,6 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { protectRoute } from "@/utils/auth/protected-route";
+import { AddExpenseDialog } from "@/components/transactions/add-expense-dialog";
+import { AddIncomeDialog } from "@/components/transactions/add-income-dialog";
 
 export default async function Home() {
   // Protect this route - redirects to /auth if not authenticated
@@ -119,8 +121,8 @@ export default async function Home() {
         <div className="mt-6 md:hidden">
           <h2 className="text-xl font-bold mb-3">Quick Actions</h2>
           <div className="grid grid-cols-2 gap-3">
-            <Button className="w-full">Add Expense</Button>
-            <Button className="w-full" variant="outline">Add Income</Button>
+            <AddExpenseDialog />
+            <AddIncomeDialog />
           </div>
         </div>
       </div>

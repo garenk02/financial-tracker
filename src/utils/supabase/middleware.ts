@@ -1,14 +1,17 @@
 // src/utils/supabase/middleware.ts
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
+  // Create a response object
   let response = NextResponse.next({
     request: {
       headers: request.headers,
     },
   })
 
+  // Create a Supabase client for middleware
+  // Note: In middleware, we don't need to await cookies() since we're using request.cookies directly
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -18,16 +21,7 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.get(name)?.value
         },
         set(name, value, options) {
-          request.cookies.set({
-            name,
-            value,
-            ...options,
-          })
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          })
+          // Set cookie on the response
           response.cookies.set({
             name,
             value,
@@ -35,16 +29,7 @@ export async function updateSession(request: NextRequest) {
           })
         },
         remove(name, options) {
-          request.cookies.set({
-            name,
-            value: '',
-            ...options,
-          })
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          })
+          // Remove cookie from the response
           response.cookies.set({
             name,
             value: '',
@@ -55,6 +40,7 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
+  // Refresh the session
   await supabase.auth.getUser()
 
   return response

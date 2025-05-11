@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { protectRoute } from "@/utils/auth/protected-route";
+import { AddExpenseDialog } from "@/components/transactions/add-expense-dialog";
+import { AddIncomeDialog } from "@/components/transactions/add-income-dialog";
 
 export default async function TransactionsPage() {
   // Protect this route - redirects to /auth if not authenticated
@@ -13,7 +15,10 @@ export default async function TransactionsPage() {
       <div className="container py-8">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">Transactions</h1>
-          <Button>Add Transaction</Button>
+          <div className="flex gap-2">
+            <AddExpenseDialog />
+            <AddIncomeDialog />
+          </div>
         </div>
 
         <div className="mb-6">
