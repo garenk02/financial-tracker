@@ -14,8 +14,14 @@ export async function createClient() {
         get(name) {
           return cookieStore.get(name)?.value
         },
-        set() {}, // No-op - cookies are set in middleware
-        remove() {}, // No-op - cookies are removed in middleware
+        set(/* name, value, options */) {
+          // This is a server-side only operation, cookies are set in middleware
+          // We're just implementing the interface here
+        },
+        remove(/* name, options */) {
+          // This is a server-side only operation, cookies are removed in middleware
+          // We're just implementing the interface here
+        },
       },
     }
   )

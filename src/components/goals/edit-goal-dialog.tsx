@@ -30,29 +30,21 @@ import { SimpleDatePicker } from "@/components/ui/simple-date-picker"
 import { Switch } from "@/components/ui/switch"
 
 import { updateGoal } from "@/utils/goals/actions"
-import { GoalFormValues, goalSchema } from "@/utils/goals/schemas"
+import { goalSchema } from "@/utils/goals/schemas"
+import { Goal } from "@/types/goals"
+import { z } from "zod"
 
 interface EditGoalDialogProps {
-  goal: {
-    id: string
-    name: string
-    target_amount: number
-    current_amount: number
-    start_date: string
-    target_date: string
-    is_completed: boolean
-    auto_allocate: boolean
-    monthly_contribution: number | null
-  }
-  onSuccess: () => void
+  goal: Goal;
+  onSuccess: () => void;
 }
 
 export function EditGoalDialog({ goal, onSuccess }: EditGoalDialogProps) {
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  // Initialize the form
-  const form = useForm<GoalFormValues>({
+  // Initialize the form with a more generic type
+  const form = useForm({
     resolver: zodResolver(goalSchema),
     defaultValues: {
       name: goal.name,
@@ -66,7 +58,7 @@ export function EditGoalDialog({ goal, onSuccess }: EditGoalDialogProps) {
   })
 
   // Handle form submission
-  const onSubmit = async (data: GoalFormValues) => {
+  const onSubmit = async (data: z.infer<typeof goalSchema>) => {
     setIsLoading(true)
 
     try {

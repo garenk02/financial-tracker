@@ -1,6 +1,7 @@
 "use client"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { FormattedCurrency } from "@/components/ui/formatted-currency"
 
 // This is a placeholder component that will be replaced with a Recharts implementation
 // once the library is installed. For now, we'll use a simple representation.
@@ -23,7 +24,7 @@ export function ExpenseChart({ categories, isLoading = false }: ExpenseChartProp
       <Card>
         <CardHeader>
           <CardTitle>Expense Breakdown</CardTitle>
-          <CardDescription>This month's spending by category</CardDescription>
+          <CardDescription>This month&apos;s spending by category</CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">Loading expense data...</p>
@@ -37,7 +38,7 @@ export function ExpenseChart({ categories, isLoading = false }: ExpenseChartProp
       <Card>
         <CardHeader>
           <CardTitle>Expense Breakdown</CardTitle>
-          <CardDescription>This month's spending by category</CardDescription>
+          <CardDescription>This month&apos;s spending by category</CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">No expense data available</p>
@@ -53,7 +54,7 @@ export function ExpenseChart({ categories, isLoading = false }: ExpenseChartProp
     <Card>
       <CardHeader>
         <CardTitle>Expense Breakdown</CardTitle>
-        <CardDescription>This month's spending by category</CardDescription>
+        <CardDescription>This month&apos;s spending by category</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -64,12 +65,14 @@ export function ExpenseChart({ categories, isLoading = false }: ExpenseChartProp
               <div key={category.id} className="space-y-1">
                 <div className="flex justify-between items-center">
                   <span className="text-sm font-medium">{category.name}</span>
-                  <span className="text-sm">${category.amount.toFixed(2)} ({percentage}%)</span>
+                  <span className="text-sm">
+                    <FormattedCurrency amount={category.amount} /> ({percentage}%)
+                  </span>
                 </div>
                 <div className="w-full bg-gray-200 dark:bg-gray-700 h-2 rounded-full overflow-hidden">
-                  <div 
-                    className="h-full rounded-full" 
-                    style={{ 
+                  <div
+                    className="h-full rounded-full"
+                    style={{
                       width: `${percentage}%`,
                       backgroundColor: category.color || '#3b82f6'
                     }}
@@ -80,7 +83,7 @@ export function ExpenseChart({ categories, isLoading = false }: ExpenseChartProp
           })}
         </div>
         <div className="mt-4 text-sm text-muted-foreground">
-          <p>Total: ${total.toFixed(2)}</p>
+          <p>Total: <FormattedCurrency amount={total} /></p>
         </div>
       </CardContent>
     </Card>
@@ -89,7 +92,7 @@ export function ExpenseChart({ categories, isLoading = false }: ExpenseChartProp
 
 // Note: Once Recharts is installed, this component can be updated to use:
 // import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts'
-// 
+//
 // The implementation would then use:
 // <ResponsiveContainer width="100%" height={300}>
 //   <PieChart>
@@ -107,7 +110,7 @@ export function ExpenseChart({ categories, isLoading = false }: ExpenseChartProp
 //         <Cell key={`cell-${index}`} fill={entry.color || COLORS[index % COLORS.length]} />
 //       ))}
 //     </Pie>
-//     <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
+//     <Tooltip formatter={(value) => <FormattedCurrency amount={value} />} />
 //     <Legend />
 //   </PieChart>
 // </ResponsiveContainer>

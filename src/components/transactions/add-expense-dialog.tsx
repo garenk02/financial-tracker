@@ -34,14 +34,14 @@ import {
 } from "@/components/ui/select"
 import { SimpleDatePicker } from "@/components/ui/simple-date-picker"
 
-import { cn } from "@/lib/utils"
 import { addExpense, getCategories } from "@/utils/transactions/actions"
 import { ExpenseFormValues, expenseSchema } from "@/utils/transactions/schemas"
+import { Category } from "@/types/budget"
 
 export function AddExpenseDialog() {
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [categories, setCategories] = useState<any[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
 
   // Initialize the form
   const form = useForm<ExpenseFormValues>({

@@ -4,7 +4,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
   // Create a response object
-  let response = NextResponse.next({
+  const response = NextResponse.next({
     request: {
       headers: request.headers,
     },
@@ -41,7 +41,15 @@ export async function updateSession(request: NextRequest) {
   )
 
   // Refresh the session
-  await supabase.auth.getUser()
+  const { data, error } = await supabase.auth.getUser()
+
+  if (error) {
+    console.error("Error in middleware getting user:", error)
+  } else if (data?.user) {
+    console.log("Middleware: User authenticated", data.user.id)
+  } else {
+    console.log("Middleware: No user found")
+  }
 
   return response
 }

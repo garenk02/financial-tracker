@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
+import { FormattedCurrency } from "@/components/ui/formatted-currency"
 
 interface BalanceCardProps {
   balance: number
@@ -31,7 +32,7 @@ export function BalanceCard({ balance, isLoading = false }: BalanceCardProps) {
       </CardHeader>
       <CardContent>
         <p className={`text-3xl font-bold ${balance < 0 ? "text-red-500" : ""}`}>
-          ${balance.toFixed(2)}
+          <FormattedCurrency amount={balance} />
         </p>
         <p className="text-sm text-muted-foreground mt-2">Last updated: Today</p>
       </CardContent>
@@ -72,12 +73,16 @@ export function BudgetCard({ spent, budget, percentage, isLoading = false }: Bud
       </CardHeader>
       <CardContent>
         <div className="flex justify-between mb-2">
-          <span className="text-sm font-medium">${spent.toFixed(2)} spent</span>
-          <span className="text-sm font-medium">${budget.toFixed(2)} budget</span>
+          <span className="text-sm font-medium">
+            <FormattedCurrency amount={spent} /> spent
+          </span>
+          <span className="text-sm font-medium">
+            <FormattedCurrency amount={budget} /> budget
+          </span>
         </div>
         <Progress value={percentage} className="h-2" />
         <p className="text-sm text-muted-foreground mt-2">
-          {remainingPercentage}% remaining (${remaining.toFixed(2)})
+          {remainingPercentage}% remaining (<FormattedCurrency amount={remaining} />)
         </p>
       </CardContent>
     </Card>
@@ -98,11 +103,11 @@ export function SummaryCards({ balance, budgetData, isLoading = false }: Summary
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       <BalanceCard balance={balance} isLoading={isLoading} />
-      <BudgetCard 
-        spent={budgetData.spent} 
-        budget={budgetData.budget} 
-        percentage={budgetData.percentage} 
-        isLoading={isLoading} 
+      <BudgetCard
+        spent={budgetData.spent}
+        budget={budgetData.budget}
+        percentage={budgetData.percentage}
+        isLoading={isLoading}
       />
     </div>
   )
@@ -134,14 +139,16 @@ export function MobileSummaryCard({ balance, budgetData, isLoading = false }: Su
             <div className="flex justify-between items-center">
               <p className="text-sm font-medium">Current Balance</p>
               <p className={`text-lg font-bold ${balance < 0 ? "text-red-500" : ""}`}>
-                ${balance.toFixed(2)}
+                <FormattedCurrency amount={balance} />
               </p>
             </div>
           </div>
           <div>
             <div className="flex justify-between items-center mb-1">
               <p className="text-sm font-medium">Monthly Budget</p>
-              <p className="text-sm">${budgetData.spent.toFixed(2)} / ${budgetData.budget.toFixed(2)}</p>
+              <p className="text-sm">
+                <FormattedCurrency amount={budgetData.spent} /> / <FormattedCurrency amount={budgetData.budget} />
+              </p>
             </div>
             <Progress value={budgetData.percentage} className="h-2" />
           </div>

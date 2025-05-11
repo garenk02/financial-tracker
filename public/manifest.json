@@ -1,5 +1,5 @@
 {
-  "name": "Financial Tracker PWA",
+  "name": "Personal Financial Tracker",
   "short_name": "FinTrack",
   "description": "A Progressive Web App for tracking finances and goals",
   "start_url": "/",
@@ -8,15 +8,9 @@
   "theme_color": "#0f172a",
   "icons": [
     {
-      "src": "/icons/icon-192x192.svg",
-      "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icons/icon-512x512.svg",
+      "src": "/logo.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]

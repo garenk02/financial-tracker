@@ -341,18 +341,8 @@ export async function addFundsToGoal(formData: AddFundsFormValues) {
       return { error: "Goal not found" }
     }
 
-    // Ensure values are numbers for calculation
-    const currentAmount = typeof goalData.current_amount === 'string'
-      ? parseFloat(goalData.current_amount)
-      : goalData.current_amount || 0
-
-    const targetAmount = typeof goalData.target_amount === 'string'
-      ? parseFloat(goalData.target_amount)
-      : goalData.target_amount || 0
-
-    const amountToAdd = typeof validatedData.amount === 'string'
-      ? parseFloat(validatedData.amount)
-      : validatedData.amount
+    // Convert values to numbers for calculation if needed
+    // These values are used in the transaction data below
 
     // Create a transaction with the goal tag
     // This will trigger the database function to update the goal's current_amount

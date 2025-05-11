@@ -29,13 +29,14 @@ export function Header() {
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:flex hidden">
         <div className="container flex h-14 items-center">
           <div className="mr-4 flex">
-            <Link href="/" className="mr-6 flex items-center space-x-2">
-              <div className="relative w-[120px] h-8">
+            <Link href="/" className="mr-6 flex items-center space-x-2 pl-2">
+              <div className="relative w-10 h-10">
                 <Image
-                  src="/logo.svg"
+                  src="/logo.png"
                   alt="FinTrack Logo"
                   fill
-                  className="dark:invert"
+                  sizes="40px"
+                  className="object-contain"
                   priority
                 />
               </div>
@@ -56,27 +57,30 @@ export function Header() {
               ))}
             </nav>
           </div>
-          <div className="flex flex-1 items-center justify-end space-x-2">
+          <div className="flex flex-1 items-center justify-end space-x-2 pr-2">
             <ThemeToggle />
           </div>
         </div>
       </header>
 
-      {/* Mobile Header - Just Logo and Theme Toggle */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:hidden flex">
+      {/* Mobile Header - Just Logo and Theme Toggle (not sticky) */}
+      <header className="relative z-10 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:hidden flex">
         <div className="container flex h-14 items-center justify-between">
-          <Link href="/" className="flex items-center">
-            <div className="relative w-[100px] h-7">
+          <Link href="/" className="flex items-center pl-2">
+            <div className="relative w-8 h-8">
               <Image
-                src="/logo.svg"
+                src="/logo.png"
                 alt="FinTrack Logo"
                 fill
-                className="dark:invert"
+                sizes="32px"
+                className="object-contain"
                 priority
               />
             </div>
           </Link>
-          <ThemeToggle />
+          <div className="pr-2">
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 

@@ -204,7 +204,7 @@ export async function getCategories(type?: 'income' | 'expense') {
     }
 
     return { success: true, data }
-  } catch (error) {
+  } catch {
     return { error: "Failed to fetch categories" }
   }
 }
@@ -271,7 +271,7 @@ export async function getTransactions({
     }
 
     // Execute the query
-    const { data, error, count } = await query
+    const { data, error } = await query
 
     if (error) {
       console.error("Error fetching transactions:", error)

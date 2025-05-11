@@ -1,20 +1,8 @@
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-
-interface Transaction {
-  id: string
-  amount: number
-  description: string
-  date: string
-  is_income: boolean
-  categories: {
-    id: string
-    name: string
-    color?: string
-    icon?: string
-  } | null
-}
+import { FormattedCurrency } from "@/components/ui/formatted-currency"
+import { Transaction } from "@/types/transactions"
 
 interface RecentTransactionsProps {
   transactions: Transaction[]
@@ -68,7 +56,8 @@ export function RecentTransactions({ transactions, isLoading = false }: RecentTr
                 </p>
               </div>
               <p className={`font-medium text-sm md:text-base ${transaction.is_income ? "text-green-600" : ""}`}>
-                {transaction.is_income ? "+" : ""}${Math.abs(transaction.amount).toFixed(2)}
+                {transaction.is_income ? "+" : ""}
+                <FormattedCurrency amount={Math.abs(transaction.amount)} />
               </p>
             </div>
           ))}

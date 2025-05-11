@@ -92,7 +92,7 @@ export function AddFundsDialog({ goalId, goalName, onSuccess }: AddFundsDialogPr
         <DialogHeader>
           <DialogTitle>Add Funds to Goal</DialogTitle>
           <DialogDescription>
-            Add funds to your "{goalName}" goal.
+            Add funds to your &quot;{goalName}&quot; goal.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

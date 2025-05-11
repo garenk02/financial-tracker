@@ -31,7 +31,8 @@ import { SimpleDatePicker } from "@/components/ui/simple-date-picker"
 import { Switch } from "@/components/ui/switch"
 
 import { addGoal } from "@/utils/goals/actions"
-import { GoalFormValues, goalSchema } from "@/utils/goals/schemas"
+import { goalSchema } from "@/utils/goals/schemas"
+import { z } from "zod"
 
 interface AddGoalDialogProps {
   onSuccess: () => void
@@ -41,8 +42,8 @@ export function AddGoalDialog({ onSuccess }: AddGoalDialogProps) {
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  // Initialize the form
-  const form = useForm<GoalFormValues>({
+  // Initialize the form with a more generic type
+  const form = useForm({
     resolver: zodResolver(goalSchema),
     defaultValues: {
       name: "",
@@ -56,7 +57,7 @@ export function AddGoalDialog({ onSuccess }: AddGoalDialogProps) {
   })
 
   // Handle form submission
-  const onSubmit = async (data: GoalFormValues) => {
+  const onSubmit = async (data: z.infer<typeof goalSchema>) => {
     setIsLoading(true)
 
     try {
@@ -143,7 +144,7 @@ export function AddGoalDialog({ onSuccess }: AddGoalDialogProps) {
                     />
                   </FormControl>
                   <FormDescription>
-                    If you've already saved some money towards this goal
+                    If you&apos;ve already saved some money towards this goal
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

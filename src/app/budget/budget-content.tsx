@@ -12,6 +12,7 @@ import { CategoryBudgetCard } from "@/components/budget/category-budget-card"
 import { BudgetSummaryCard } from "@/components/budget/budget-summary-card"
 import { getCurrentMonthlyBudget } from "@/utils/budget/actions"
 import { getMonthlySpendingSummary, getCategoryBudgetsWithSpending } from "@/utils/dashboard/actions"
+import { Budget, CategoryBudget, SpendingData } from "@/types/budget"
 
 // Skeleton loader for category budget cards
 function CategoryBudgetCardSkeleton() {
@@ -34,9 +35,9 @@ function CategoryBudgetCardSkeleton() {
 
 export function BudgetContent() {
   const [isLoading, setIsLoading] = useState(true)
-  const [budget, setBudget] = useState<any>(null)
-  const [categoryBudgets, setCategoryBudgets] = useState<any[]>([])
-  const [spendingData, setSpendingData] = useState<any>({
+  const [budget, setBudget] = useState<Budget | null>(null)
+  const [categoryBudgets, setCategoryBudgets] = useState<CategoryBudget[]>([])
+  const [spendingData, setSpendingData] = useState<SpendingData>({
     spent: 0,
     budget: 0,
     remaining: 0,
@@ -45,7 +46,7 @@ export function BudgetContent() {
 
   // Calculate the current month and year
   const now = new Date()
-  const currentMonth = now.getMonth() + 1 // 1-12
+  // const currentMonth = now.getMonth() + 1 // 1-12 (unused)
   const currentYear = now.getFullYear()
   const monthNames = [
     "January", "February", "March", "April", "May", "June",
@@ -76,7 +77,7 @@ export function BudgetContent() {
         if (categoryBudgetsResult.error) {
           toast.error(categoryBudgetsResult.error)
         } else if (categoryBudgetsResult.success) {
-          setCategoryBudgets(categoryBudgetsResult.data || [])
+          setCategoryBudgets(categoryBudgetsResult.data as CategoryBudget[] || [])
         }
       } else {
         setBudget(null)

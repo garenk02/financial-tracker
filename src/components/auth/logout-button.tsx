@@ -7,22 +7,26 @@ import { LogOut } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { toast } from "sonner";
 
-export function LogoutButton() {
+interface LogoutButtonProps {
+  className?: string;
+}
+
+export function LogoutButton({ className }: LogoutButtonProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const supabase = createClient();
 
   const handleLogout = async () => {
     setIsLoading(true);
-    
+
     try {
       const { error } = await supabase.auth.signOut();
-      
+
       if (error) {
         toast.error(error.message);
         return;
       }
-      
+
       // Redirect to sign-in page
       router.push("/auth");
       router.refresh();
@@ -35,10 +39,11 @@ export function LogoutButton() {
   };
 
   return (
-    <Button 
-      variant="destructive" 
+    <Button
+      variant="destructive"
       onClick={handleLogout}
       disabled={isLoading}
+      className={className}
     >
       {isLoading ? (
         <span className="flex items-center gap-1">

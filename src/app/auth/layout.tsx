@@ -4,7 +4,7 @@ import Image from "next/image";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export const metadata: Metadata = {
-  title: "Authentication - Financial Tracker PWA",
+  title: "Authentication - Financial Tracker",
   description: "Sign in or sign up to your financial tracker account",
 };
 
@@ -19,12 +19,13 @@ export default function AuthLayout({
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex">
         <div className="container flex h-14 items-center justify-between">
           <Link href="/" className="flex items-center">
-            <div className="relative w-[120px] h-8 md:w-[140px] md:h-9">
+            <div className="relative w-9 h-9 md:w-10 md:h-10">
               <Image
-                src="/logo.svg"
+                src="/logo.png"
                 alt="FinTrack Logo"
                 fill
-                className="dark:invert"
+                sizes="(max-width: 768px) 36px, 40px"
+                className="object-contain"
                 priority
               />
             </div>

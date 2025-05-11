@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
+import { FormattedCurrency } from "@/components/ui/formatted-currency"
 
 import { MagnifyingGlassIcon, Cross2Icon } from "@radix-ui/react-icons"
 
@@ -81,7 +82,7 @@ export function TransactionList({
         const years = Math.floor(diffDays / 365)
         return `${years} ${years === 1 ? 'year' : 'years'} ago`
       }
-    } catch (error) {
+    } catch {
       return dateString
     }
   }
@@ -235,7 +236,8 @@ export function TransactionList({
                       transaction.is_income ? "text-green-600" : ""
                     }`}
                   >
-                    {transaction.is_income ? "+" : ""}${Math.abs(transaction.amount).toFixed(2)}
+                    {transaction.is_income ? "+" : ""}
+                    <FormattedCurrency amount={Math.abs(transaction.amount)} />
                   </p>
                 </div>
               ))}

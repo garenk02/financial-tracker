@@ -2,7 +2,8 @@
 
 import { useState } from "react"
 import { formatDistanceToNow } from "date-fns"
-import { Goal } from "lucide-react"
+import { Goal as GoalIcon } from "lucide-react"
+import { Goal } from "@/types/goals"
 import { toast } from "sonner"
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -11,20 +12,11 @@ import { Progress } from "@/components/ui/progress"
 import { EditGoalDialog } from "./edit-goal-dialog"
 import { AddFundsDialog } from "./add-funds-dialog"
 import { deleteGoal } from "@/utils/goals/actions"
+import { FormattedCurrency } from "@/components/ui/formatted-currency"
 
 interface GoalCardProps {
-  goal: {
-    id: string
-    name: string
-    target_amount: number
-    current_amount: number
-    start_date: string
-    target_date: string
-    is_completed: boolean
-    auto_allocate: boolean
-    monthly_contribution: number | null
-  }
-  onUpdate: () => void
+  goal: Goal;
+  onUpdate: () => void;
 }
 
 export function GoalCard({ goal, onUpdate }: GoalCardProps) {
@@ -69,7 +61,7 @@ export function GoalCard({ goal, onUpdate }: GoalCardProps) {
         } else if (result.error) {
           toast.error(result.error)
         }
-      } catch (error) {
+      } catch {
         toast.error("Failed to delete goal")
       } finally {
         setIsDeleting(false)
@@ -83,7 +75,7 @@ export function GoalCard({ goal, onUpdate }: GoalCardProps) {
         <div className="flex justify-between items-start">
           <div>
             <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-              <Goal className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+              <GoalIcon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
               <span className="line-clamp-1">{goal.name}</span>
             </CardTitle>
             <CardDescription>
@@ -100,14 +92,18 @@ export function GoalCard({ goal, onUpdate }: GoalCardProps) {
       <CardContent className="flex-1 px-6">
         <div className="flex justify-between mb-2">
           <span className="text-xs sm:text-sm font-medium">
-            ${(typeof goal.current_amount === 'string'
-              ? parseFloat(goal.current_amount)
-              : goal.current_amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            <FormattedCurrency
+              amount={typeof goal.current_amount === 'string'
+                ? parseFloat(goal.current_amount)
+                : goal.current_amount || 0}
+            />
           </span>
           <span className="text-xs sm:text-sm font-medium">
-            ${(typeof goal.target_amount === 'string'
-              ? parseFloat(goal.target_amount)
-              : goal.target_amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            <FormattedCurrency
+              amount={typeof goal.target_amount === 'string'
+                ? parseFloat(goal.target_amount)
+                : goal.target_amount || 0}
+            />
           </span>
         </div>
         <Progress
@@ -125,7 +121,7 @@ export function GoalCard({ goal, onUpdate }: GoalCardProps) {
           </p>
           {goal.monthly_contribution && (
             <p className="text-xs sm:text-sm font-medium">
-              ${goal.monthly_contribution.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} monthly contribution
+              <FormattedCurrency amount={goal.monthly_contribution} /> monthly contribution
             </p>
           )}
         </div>

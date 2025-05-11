@@ -43,11 +43,11 @@ export default async function TransactionsPage({
     ? transactionsResult.data.map(t => ({
         ...t,
         // Ensure categories is properly formatted as expected by the Transaction type
-        categories: t.categories ? {
-          id: t.categories.id || '',
-          name: t.categories.name || 'Uncategorized',
-          color: t.categories.color,
-          icon: t.categories.icon
+        categories: t.categories && t.categories.length > 0 ? {
+          id: t.categories[0].id || '',
+          name: t.categories[0].name || 'Uncategorized',
+          color: t.categories[0].color,
+          icon: t.categories[0].icon
         } : null
       }))
     : [];

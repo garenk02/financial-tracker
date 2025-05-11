@@ -4,9 +4,9 @@ import { cookies } from 'next/headers'
 import { createServerClient } from '@supabase/ssr'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
-import { 
-  monthlyBudgetSchema, 
-  categoryBudgetSchema, 
+import {
+  monthlyBudgetSchema,
+  categoryBudgetSchema,
   categoryBudgetsSchema,
   type MonthlyBudgetFormValues,
   type CategoryBudgetFormValues,
@@ -175,7 +175,7 @@ export async function getBudgetCategories(budgetId: string) {
     }
 
     // Verify the budget belongs to the user
-    const { data: budgetData, error: budgetError } = await supabase
+    const { error: budgetError } = await supabase
       .from('monthly_budgets')
       .select('id')
       .eq('id', budgetId)
@@ -232,7 +232,7 @@ export async function updateCategoryBudget(budgetId: string, formData: CategoryB
     }
 
     // Verify the budget belongs to the user
-    const { data: budgetData, error: budgetError } = await supabase
+    const { error: budgetError } = await supabase
       .from('monthly_budgets')
       .select('id')
       .eq('id', budgetId)
@@ -324,7 +324,7 @@ export async function updateMultipleCategoryBudgets(formData: CategoryBudgetsFor
     }
 
     // Verify the budget belongs to the user
-    const { data: budgetData, error: budgetError } = await supabase
+    const { error: budgetError } = await supabase
       .from('monthly_budgets')
       .select('id')
       .eq('id', validatedData.budget_id)

@@ -2,16 +2,17 @@
 
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { Goal } from "lucide-react";
+import { Goal as GoalIcon } from "lucide-react";
 
 import { AddGoalDialog } from "@/components/goals/add-goal-dialog";
 import { GoalCard } from "@/components/goals/goal-card";
 import { GoalCardSkeleton } from "@/components/goals/goal-card-skeleton";
 import { getGoals } from "@/utils/goals/actions";
 import { EmptyState } from "@/components/ui/empty-state";
+import { Goal } from "@/types/goals";
 
 export function GoalsContent() {
-  const [goals, setGoals] = useState<any[]>([]);
+  const [goals, setGoals] = useState<Goal[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -26,7 +27,7 @@ export function GoalsContent() {
         } else if (result.error) {
           toast.error(result.error);
         }
-      } catch (error) {
+      } catch {
         toast.error("Failed to load goals");
       } finally {
         setIsLoading(false);
@@ -61,7 +62,7 @@ export function GoalsContent() {
         </div>
       ) : goals.length === 0 ? (
         <EmptyState
-          icon={<Goal className="h-12 w-12 text-muted-foreground" />}
+          icon={<GoalIcon className="h-12 w-12 text-muted-foreground" />}
           title="No goals yet"
           description="Create your first financial goal to start tracking your progress."
           action={<AddGoalDialog onSuccess={handleRefresh} />}

@@ -1,11 +1,12 @@
 'use client'
 
 import Link from "next/link"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { PlusCircle } from "lucide-react"
+import { FormattedCurrency } from "@/components/ui/formatted-currency"
 
 interface CategoryBudget {
   id: string
@@ -35,7 +36,13 @@ export function CategoryBudgetList({ categoryBudgets, isLoading = false }: Categ
     )
   }
 
-  if (categoryBudgets.length === 0) {
+  // Filter out any budgets with empty category names
+  const validBudgets = categoryBudgets.filter(budget =>
+    budget.categories && budget.categories.name && budget.categories.name !== 'Category'
+  )
+
+  // If we have at least one valid budget, show it
+  if (validBudgets.length === 0) {
     return (
       <Card>
         <CardContent className="pt-6">
@@ -56,7 +63,7 @@ export function CategoryBudgetList({ categoryBudgets, isLoading = false }: Categ
   }
 
   // Sort by percentage spent (highest first)
-  const sortedBudgets = [...categoryBudgets].sort((a, b) => {
+  const sortedBudgets = [...validBudgets].sort((a, b) => {
     const percentA = a.allocated_amount > 0 ? (a.spent / a.allocated_amount) : 0
     const percentB = b.allocated_amount > 0 ? (b.spent / b.allocated_amount) : 0
     return percentB - percentA
@@ -84,11 +91,11 @@ export function CategoryBudgetList({ categoryBudgets, isLoading = false }: Categ
 }
 
 function CategoryBudgetItem({ budget }: { budget: CategoryBudget }) {
-  const percentage = budget.allocated_amount > 0 
-    ? Math.min(Math.round((budget.spent / budget.allocated_amount) * 100), 100) 
+  const percentage = budget.allocated_amount > 0
+    ? Math.min(Math.round((budget.spent / budget.allocated_amount) * 100), 100)
     : 0
-  
-  const remaining = Math.max(budget.allocated_amount - budget.spent, 0)
+
+  // Calculate if over budget
   const isOverBudget = budget.spent > budget.allocated_amount
 
   return (
@@ -100,17 +107,17 @@ function CategoryBudgetItem({ budget }: { budget: CategoryBudget }) {
             {isOverBudget ? "Over budget" : `${percentage}%`}
           </span>
         </div>
-        <Progress 
-          value={percentage} 
-          className="h-2 mb-2" 
+        <Progress
+          value={percentage}
+          className="h-2 mb-2"
           indicatorClassName={isOverBudget ? "bg-destructive" : undefined}
-          style={{ 
-            "--progress-background": budget.categories.color 
-          } as React.CSSProperties} 
+          style={{
+            "--progress-background": budget.categories.color
+          } as React.CSSProperties}
         />
         <div className="flex justify-between items-center text-xs text-muted-foreground">
-          <span>${budget.spent.toFixed(2)} spent</span>
-          <span>${budget.allocated_amount.toFixed(2)} allocated</span>
+          <span><FormattedCurrency amount={budget.spent} /> spent</span>
+          <span><FormattedCurrency amount={budget.allocated_amount} /> allocated</span>
         </div>
       </CardContent>
     </Card>

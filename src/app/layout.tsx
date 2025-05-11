@@ -3,6 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { CurrencyProvider } from "@/contexts/currency-context";
+import { CurrencyInitializer } from "@/components/currency-initializer";
+import { getInitialCurrency } from "@/utils/auth/get-initial-currency";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,12 +18,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Financial Tracker PWA",
-  description: "A Progressive Web App for tracking finances and goals",
+  title: "Financial Tracker",
+  description: "A Progressive Web App for personal tracking finances and goals",
   manifest: "/manifest.json",
   icons: {
-    icon: "/favicon.svg",
-    apple: "/icons/icon-192x192.svg",
+    icon: "/logo.png",
+    apple: "/logo.png",
   },
   appleWebApp: {
     capable: true,
@@ -37,11 +40,14 @@ export const viewport = {
   userScalable: false,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Get the user's currency preference from the server using a server action
+  const initialCurrency = await getInitialCurrency();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -53,8 +59,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
-          <Toaster />
+          <CurrencyProvider initialCurrencyCode={initialCurrency}>
+            <CurrencyInitializer initialCurrency={initialCurrency} />
+            {children}
+            <Toaster />
+          </CurrencyProvider>
         </ThemeProvider>
       </body>
     </html>

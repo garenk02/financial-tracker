@@ -2,7 +2,6 @@
 
 import { cookies } from 'next/headers'
 import { createServerClient } from '@supabase/ssr'
-import { z } from 'zod'
 
 // Create a Supabase client for server actions
 async function createActionClient() {
@@ -229,11 +228,11 @@ export async function getExpenseBreakdown() {
     const categoryMap = new Map()
 
     data.forEach(transaction => {
-      if (!transaction.categories) return
+      if (!transaction.categories || !transaction.categories.length) return
 
-      const categoryId = transaction.categories.id
-      const categoryName = transaction.categories.name
-      const categoryColor = transaction.categories.color
+      const categoryId = transaction.categories[0].id
+      const categoryName = transaction.categories[0].name
+      const categoryColor = transaction.categories[0].color
 
       if (!categoryMap.has(categoryId)) {
         categoryMap.set(categoryId, {
@@ -295,12 +294,13 @@ export async function getCategoryBudgetsWithSpending() {
       return { success: true, data: [] }
     }
 
-    // Get budget categories
+    // Get budget categories with valid categories
     const { data: categoryBudgets, error: categoryError } = await supabase
       .from('budget_categories')
       .select(`
         id,
         allocated_amount,
+        category_id,
         categories (
           id,
           name,
@@ -310,6 +310,8 @@ export async function getCategoryBudgetsWithSpending() {
         )
       `)
       .eq('budget_id', budgetData.id)
+      .order('created_at', { ascending: false })
+      .limit(1)
 
     if (categoryError) {
       console.error("Error fetching budget categories:", categoryError)
@@ -335,7 +337,7 @@ export async function getCategoryBudgetsWithSpending() {
     }
 
     // Calculate spending by category
-    const spendingByCategory = transactions.reduce((acc, transaction) => {
+    const spendingByCategory = transactions.reduce<Record<string, number>>((acc, transaction) => {
       if (!transaction.category_id) return acc
 
       if (!acc[transaction.category_id]) {
@@ -349,7 +351,7 @@ export async function getCategoryBudgetsWithSpending() {
     // Add spending data to category budgets
     const enhancedCategoryBudgets = categoryBudgets.map(budget => ({
       ...budget,
-      spent: spendingByCategory[budget.categories.id] || 0
+      spent: spendingByCategory[budget.categories && budget.categories.length > 0 ? budget.categories[0].id : ''] || 0
     }))
 
     return {

@@ -21,7 +21,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
 import { CurrencyInput } from "@/components/ui/currency-input"
 import {
   Select,
@@ -33,6 +32,7 @@ import {
 import { updateCategoryBudget } from "@/utils/budget/actions"
 import { getCategories } from "@/utils/transactions/actions"
 import { CategoryBudgetFormValues, categoryBudgetSchema } from "@/utils/budget/schemas"
+import { Category } from "@/types/budget"
 
 interface AddCategoryBudgetDialogProps {
   budgetId: string
@@ -42,7 +42,7 @@ interface AddCategoryBudgetDialogProps {
 export function AddCategoryBudgetDialog({ budgetId, onSuccess }: AddCategoryBudgetDialogProps) {
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [categories, setCategories] = useState<any[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
 
   // Initialize the form
   const form = useForm<CategoryBudgetFormValues>({
