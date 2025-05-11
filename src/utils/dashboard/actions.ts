@@ -163,12 +163,12 @@ export async function getMonthlySpendingSummary() {
 
     // Calculate total spent
     const totalSpent = expensesData.reduce((sum, transaction) => sum + transaction.amount, 0)
-    
+
     // Default budget if none exists
     const budget = budgetData?.total_budget || 3000
 
-    return { 
-      success: true, 
+    return {
+      success: true,
       data: {
         spent: totalSpent,
         budget: budget,
@@ -199,7 +199,7 @@ export async function getExpenseBreakdown() {
     const now = new Date()
     const currentMonth = now.getMonth() + 1 // 1-12
     const currentYear = now.getFullYear()
-    
+
     // Get start and end of month
     const startOfMonth = new Date(currentYear, currentMonth - 1, 1).toISOString().split('T')[0]
     const endOfMonth = new Date(currentYear, currentMonth, 0).toISOString().split('T')[0]
@@ -227,14 +227,14 @@ export async function getExpenseBreakdown() {
 
     // Group by category
     const categoryMap = new Map()
-    
+
     data.forEach(transaction => {
       if (!transaction.categories) return
-      
+
       const categoryId = transaction.categories.id
       const categoryName = transaction.categories.name
       const categoryColor = transaction.categories.color
-      
+
       if (!categoryMap.has(categoryId)) {
         categoryMap.set(categoryId, {
           id: categoryId,
@@ -243,10 +243,10 @@ export async function getExpenseBreakdown() {
           amount: 0
         })
       }
-      
+
       categoryMap.get(categoryId).amount += transaction.amount
     })
-    
+
     // Convert to array and sort by amount
     const categories = Array.from(categoryMap.values())
       .sort((a, b) => b.amount - a.amount)
@@ -255,5 +255,110 @@ export async function getExpenseBreakdown() {
   } catch (error) {
     console.error("Failed to fetch expense breakdown:", error)
     return { error: "Failed to fetch expense breakdown" }
+  }
+}
+
+// Get category budgets with spending data
+export async function getCategoryBudgetsWithSpending() {
+  try {
+    // Create Supabase client
+    const supabase = await createActionClient()
+
+    // Get the current user
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
+
+    if (userError || !user) {
+      return { error: "You must be logged in to view category budgets" }
+    }
+
+    // Get current month and year
+    const now = new Date()
+    const currentMonth = now.getMonth() + 1 // 1-12
+    const currentYear = now.getFullYear()
+
+    // Get monthly budget if exists
+    const { data: budgetData, error: budgetError } = await supabase
+      .from('monthly_budgets')
+      .select('id, total_budget')
+      .eq('user_id', user.id)
+      .eq('month', currentMonth)
+      .eq('year', currentYear)
+      .single()
+
+    if (budgetError && budgetError.code !== 'PGRST116') { // PGRST116 is "no rows returned"
+      console.error("Error fetching monthly budget:", budgetError)
+      return { error: budgetError.message }
+    }
+
+    // If no budget exists, return empty array
+    if (!budgetData) {
+      return { success: true, data: [] }
+    }
+
+    // Get budget categories
+    const { data: categoryBudgets, error: categoryError } = await supabase
+      .from('budget_categories')
+      .select(`
+        id,
+        allocated_amount,
+        categories (
+          id,
+          name,
+          type,
+          color,
+          icon
+        )
+      `)
+      .eq('budget_id', budgetData.id)
+
+    if (categoryError) {
+      console.error("Error fetching budget categories:", categoryError)
+      return { error: categoryError.message }
+    }
+
+    // Get start and end of month for transactions
+    const startOfMonth = new Date(currentYear, currentMonth - 1, 1).toISOString().split('T')[0]
+    const endOfMonth = new Date(currentYear, currentMonth, 0).toISOString().split('T')[0]
+
+    // Get expenses for the month
+    const { data: transactions, error: transactionsError } = await supabase
+      .from('transactions')
+      .select('amount, category_id')
+      .eq('user_id', user.id)
+      .eq('is_income', false)
+      .gte('date', startOfMonth)
+      .lte('date', endOfMonth)
+
+    if (transactionsError) {
+      console.error("Error fetching transactions:", transactionsError)
+      return { error: transactionsError.message }
+    }
+
+    // Calculate spending by category
+    const spendingByCategory = transactions.reduce((acc, transaction) => {
+      if (!transaction.category_id) return acc
+
+      if (!acc[transaction.category_id]) {
+        acc[transaction.category_id] = 0
+      }
+
+      acc[transaction.category_id] += transaction.amount
+      return acc
+    }, {})
+
+    // Add spending data to category budgets
+    const enhancedCategoryBudgets = categoryBudgets.map(budget => ({
+      ...budget,
+      spent: spendingByCategory[budget.categories.id] || 0
+    }))
+
+    return {
+      success: true,
+      data: enhancedCategoryBudgets,
+      totalBudget: budgetData.total_budget
+    }
+  } catch (error) {
+    console.error("Failed to fetch category budgets with spending:", error)
+    return { error: "Failed to fetch category budgets with spending" }
   }
 }

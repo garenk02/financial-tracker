@@ -7,11 +7,13 @@ import { AddIncomeDialog } from "@/components/transactions/add-income-dialog";
 import { MobileSummaryCard, SummaryCards } from "@/components/dashboard/summary-cards";
 import { RecentTransactions } from "@/components/dashboard/recent-transactions";
 import { ExpenseChart } from "@/components/dashboard/expense-chart";
+import { CategoryBudgetList } from "@/components/dashboard/category-budget-list";
 import {
   getRecentTransactions,
   getCurrentBalance,
   getMonthlySpendingSummary,
-  getExpenseBreakdown
+  getExpenseBreakdown,
+  getCategoryBudgetsWithSpending
 } from "@/utils/dashboard/actions";
 import Link from "next/link";
 
@@ -20,11 +22,18 @@ export default async function Home() {
   await protectRoute();
 
   // Fetch dashboard data
-  const [transactionsResult, balanceResult, spendingResult, expenseBreakdownResult] = await Promise.all([
+  const [
+    transactionsResult,
+    balanceResult,
+    spendingResult,
+    expenseBreakdownResult,
+    categoryBudgetsResult
+  ] = await Promise.all([
     getRecentTransactions(5),
     getCurrentBalance(),
     getMonthlySpendingSummary(),
-    getExpenseBreakdown()
+    getExpenseBreakdown(),
+    getCategoryBudgetsWithSpending()
   ]);
 
   // Handle data or use defaults
@@ -34,6 +43,7 @@ export default async function Home() {
     ? spendingResult.data
     : { spent: 0, budget: 3000, remaining: 3000, percentage: 0 };
   const expenseCategories = expenseBreakdownResult.success ? expenseBreakdownResult.data : [];
+  const categoryBudgets = categoryBudgetsResult.success ? categoryBudgetsResult.data : [];
 
   return (
     <MainLayout>
@@ -52,26 +62,61 @@ export default async function Home() {
           budgetData={budgetData}
         />
 
-        {/* Expense Breakdown Chart */}
-        <div className="mt-6">
+        {/* Expense Chart - visible on all devices */}
+        <div className="mt-6 mb-6">
           <ExpenseChart categories={expenseCategories} />
         </div>
 
-        <div className="flex justify-between items-center mt-6 md:mt-10 mb-2 md:mb-4">
-          <h2 className="text-xl md:text-2xl font-bold">Recent Transactions</h2>
-          <Link href="/transactions">
-            <Button variant="outline" size="sm" className="text-xs md:text-sm">View All</Button>
-          </Link>
+        {/* Desktop layout - two columns */}
+        <div className="hidden md:grid mt-6 gap-6 grid-cols-2">
+          {/* Left column */}
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-lg font-bold">Recent Transactions</h2>
+              <Link href="/transactions">
+                <Button variant="outline" size="sm" className="text-xs">View All</Button>
+              </Link>
+            </div>
+            <RecentTransactions transactions={transactions} />
+          </div>
+
+          {/* Right column */}
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-lg font-bold">Category Budgets</h2>
+              <Link href="/budget">
+                <Button variant="outline" size="sm" className="text-xs">Manage</Button>
+              </Link>
+            </div>
+            <CategoryBudgetList categoryBudgets={categoryBudgets} />
+          </div>
         </div>
 
-        <RecentTransactions transactions={transactions} />
+        {/* Mobile layout - stacked */}
+        <div className="md:hidden">
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="text-xl font-bold">Recent Transactions</h2>
+            <Link href="/transactions">
+              <Button variant="outline" size="sm" className="text-xs">View All</Button>
+            </Link>
+          </div>
+          <RecentTransactions transactions={transactions} />
 
-        {/* Quick Actions for Mobile */}
-        <div className="mt-6 md:hidden">
-          <h2 className="text-xl font-bold mb-3">Quick Actions</h2>
-          <div className="grid grid-cols-2 gap-3">
-            <AddExpenseDialog />
-            <AddIncomeDialog />
+          <div className="flex justify-between items-center mt-6 mb-2">
+            <h2 className="text-xl font-bold">Category Budgets</h2>
+            <Link href="/budget">
+              <Button variant="outline" size="sm" className="text-xs">Manage</Button>
+            </Link>
+          </div>
+          <CategoryBudgetList categoryBudgets={categoryBudgets} />
+
+          {/* Quick Actions for Mobile */}
+          <div className="mt-6">
+            <h2 className="text-xl font-bold mb-3">Quick Actions</h2>
+            <div className="grid grid-cols-2 gap-3">
+              <AddExpenseDialog />
+              <AddIncomeDialog />
+            </div>
           </div>
         </div>
       </div>

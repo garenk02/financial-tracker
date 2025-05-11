@@ -8,12 +8,14 @@ import {
   HomeIcon,
   FileTextIcon,
   TargetIcon,
-  GearIcon
+  GearIcon,
+  PieChartIcon
 } from "@radix-ui/react-icons"
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon },
   { name: "Transactions", href: "/transactions", icon: FileTextIcon },
+  { name: "Budget", href: "/budget", icon: PieChartIcon },
   { name: "Goals", href: "/goals", icon: TargetIcon },
   { name: "Settings", href: "/settings", icon: GearIcon },
 ]
