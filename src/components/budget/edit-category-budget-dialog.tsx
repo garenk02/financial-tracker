@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
@@ -20,7 +20,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+import { CurrencyInput } from "@/components/ui/currency-input"
 import { updateCategoryBudget } from "@/utils/budget/actions"
 import { CategoryBudgetFormValues, categoryBudgetSchema } from "@/utils/budget/schemas"
 
@@ -53,6 +53,16 @@ export function EditCategoryBudgetDialog({
       allocated_amount: initialAmount,
     },
   })
+
+  // Reset form with initial values when dialog opens
+  useEffect(() => {
+    if (open) {
+      form.reset({
+        category_id: categoryId,
+        allocated_amount: initialAmount,
+      });
+    }
+  }, [open, categoryId, initialAmount, form]);
 
   // Handle form submission
   const onSubmit = async (data: CategoryBudgetFormValues) => {
@@ -95,12 +105,10 @@ export function EditCategoryBudgetDialog({
                 <FormItem>
                   <FormLabel>Allocated Amount</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      placeholder="0.00"
-                      {...field}
-                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                    <CurrencyInput
+                      value={field.value}
+                      onChange={field.onChange}
+                      min={0.01}
                     />
                   </FormControl>
                   <FormMessage />

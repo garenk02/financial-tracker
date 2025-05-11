@@ -21,7 +21,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+import { CurrencyInput } from "@/components/ui/currency-input"
 import { createOrUpdateMonthlyBudget } from "@/utils/budget/actions"
 import { MonthlyBudgetFormValues, monthlyBudgetSchema } from "@/utils/budget/schemas"
 
@@ -54,6 +54,20 @@ export function AddBudgetDialog({ onSuccess, existingBudget }: AddBudgetDialogPr
     },
   })
 
+  // Reset form with existing budget values when dialog opens
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+
+    // When opening the dialog, reset the form with the current values
+    if (newOpen && existingBudget) {
+      form.reset({
+        total_budget: existingBudget.total_budget,
+        month: existingBudget.month,
+        year: existingBudget.year
+      });
+    }
+  }
+
   // Handle form submission
   const onSubmit = async (data: MonthlyBudgetFormValues) => {
     setIsLoading(true)
@@ -78,7 +92,7 @@ export function AddBudgetDialog({ onSuccess, existingBudget }: AddBudgetDialogPr
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant={existingBudget ? "outline" : "default"}>
           {existingBudget ? "Edit Budget" : "Set Monthly Budget"}
@@ -88,8 +102,8 @@ export function AddBudgetDialog({ onSuccess, existingBudget }: AddBudgetDialogPr
         <DialogHeader>
           <DialogTitle>{existingBudget ? "Edit Budget" : "Set Monthly Budget"}</DialogTitle>
           <DialogDescription>
-            {existingBudget 
-              ? "Update your monthly budget amount." 
+            {existingBudget
+              ? "Update your monthly budget amount."
               : "Set your total budget for the current month."}
           </DialogDescription>
         </DialogHeader>
@@ -102,12 +116,10 @@ export function AddBudgetDialog({ onSuccess, existingBudget }: AddBudgetDialogPr
                 <FormItem>
                   <FormLabel>Total Budget Amount</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      placeholder="0.00"
-                      {...field}
-                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                    <CurrencyInput
+                      value={field.value}
+                      onChange={field.onChange}
+                      min={0.01}
                     />
                   </FormControl>
                   <FormMessage />

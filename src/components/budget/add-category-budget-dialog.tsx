@@ -22,6 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { CurrencyInput } from "@/components/ui/currency-input"
 import {
   Select,
   SelectContent,
@@ -65,8 +66,14 @@ export function AddCategoryBudgetDialog({ budgetId, onSuccess }: AddCategoryBudg
       }
 
       fetchCategories()
+
+      // Reset form when dialog opens
+      form.reset({
+        category_id: "",
+        allocated_amount: 0,
+      });
     }
-  }, [open])
+  }, [open, form])
 
   // Handle form submission
   const onSubmit = async (data: CategoryBudgetFormValues) => {
@@ -140,12 +147,10 @@ export function AddCategoryBudgetDialog({ budgetId, onSuccess }: AddCategoryBudg
                 <FormItem>
                   <FormLabel>Allocated Amount</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      placeholder="0.00"
-                      {...field}
-                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                    <CurrencyInput
+                      value={field.value}
+                      onChange={field.onChange}
+                      min={0.01}
                     />
                   </FormControl>
                   <FormMessage />
