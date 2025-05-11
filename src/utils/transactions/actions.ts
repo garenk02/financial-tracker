@@ -208,3 +208,101 @@ export async function getCategories(type?: 'income' | 'expense') {
     return { error: "Failed to fetch categories" }
   }
 }
+
+// Get all transactions with filtering options
+export async function getTransactions({
+  type,
+  page = 1,
+  limit = 20,
+  search = '',
+}: {
+  type?: 'all' | 'income' | 'expense';
+  page?: number;
+  limit?: number;
+  search?: string;
+} = {}) {
+  try {
+    // Create Supabase client
+    const supabase = await createActionClient()
+
+    // Get the current user
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
+
+    if (userError || !user) {
+      return { error: "You must be logged in to view transactions" }
+    }
+
+    // Calculate pagination
+    const from = (page - 1) * limit
+    const to = from + limit - 1
+
+    // Start building the query
+    let query = supabase
+      .from('transactions')
+      .select(`
+        id,
+        amount,
+        description,
+        date,
+        is_income,
+        tags,
+        created_at,
+        categories (
+          id,
+          name,
+          color,
+          icon
+        )
+      `)
+      .eq('user_id', user.id)
+      .order('date', { ascending: false })
+      .range(from, to)
+
+    // Apply type filter if provided
+    if (type === 'income') {
+      query = query.eq('is_income', true)
+    } else if (type === 'expense') {
+      query = query.eq('is_income', false)
+    }
+
+    // Apply search filter if provided
+    if (search) {
+      query = query.ilike('description', `%${search}%`)
+    }
+
+    // Execute the query
+    const { data, error, count } = await query
+
+    if (error) {
+      console.error("Error fetching transactions:", error)
+      return { error: error.message }
+    }
+
+    // Get total count for pagination
+    const { count: totalCount, error: countError } = await supabase
+      .from('transactions')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+      // Apply the same filters for consistent count
+      .ilike(search ? 'description' : 'id', search ? `%${search}%` : '*')
+      .eq(type === 'income' ? 'is_income' : 'id', type === 'income' ? true : type === 'expense' ? false : '*')
+
+    if (countError) {
+      console.error("Error counting transactions:", countError)
+    }
+
+    return {
+      success: true,
+      data,
+      pagination: {
+        page,
+        limit,
+        total: totalCount || 0,
+        totalPages: Math.ceil((totalCount || 0) / limit)
+      }
+    }
+  } catch (error) {
+    console.error("Failed to fetch transactions:", error)
+    return { error: "Failed to fetch transactions" }
+  }
+}

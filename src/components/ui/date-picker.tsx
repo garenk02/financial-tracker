@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { format } from "date-fns/format"
 import { Calendar as CalendarIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -20,6 +19,30 @@ interface DatePickerProps {
   placeholder?: string
 }
 
+// Format date without using date-fns
+function formatDate(date: Date): string {
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  const day = date.getDate()
+  const month = months[date.getMonth()]
+  const year = date.getFullYear()
+
+  // Add ordinal suffix to day
+  const suffix = getDaySuffix(day)
+
+  return `${month} ${day}${suffix}, ${year}`
+}
+
+// Get ordinal suffix for day (1st, 2nd, 3rd, etc.)
+function getDaySuffix(day: number): string {
+  if (day > 3 && day < 21) return 'th'
+  switch (day % 10) {
+    case 1: return 'st'
+    case 2: return 'nd'
+    case 3: return 'rd'
+    default: return 'th'
+  }
+}
+
 export function DatePicker({ date, setDate, className, placeholder = "Pick a date" }: DatePickerProps) {
   return (
     <Popover>
@@ -33,7 +56,7 @@ export function DatePicker({ date, setDate, className, placeholder = "Pick a dat
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP") : <span>{placeholder}</span>}
+          {date ? formatDate(date) : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
