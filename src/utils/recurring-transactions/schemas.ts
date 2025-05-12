@@ -1,5 +1,4 @@
 import { z } from 'zod'
-import { RecurringFrequency } from '@/types/recurring-transactions'
 
 // Define schemas for recurring transaction validation
 export const recurringTransactionSchema = z.object({

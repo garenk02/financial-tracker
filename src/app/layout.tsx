@@ -63,7 +63,7 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ThemeContextProvider initialTheme={initialTheme as any}>
+          <ThemeContextProvider initialTheme={initialTheme as "light" | "dark" | "system"}>
             <CurrencyProvider initialCurrencyCode={initialCurrency}>
               <CurrencyInitializer initialCurrency={initialCurrency} />
               {children}

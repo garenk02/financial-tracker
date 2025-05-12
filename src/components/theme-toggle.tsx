@@ -17,7 +17,7 @@ export function ThemeToggle() {
 
   // Function to toggle between light and dark directly
   const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark" as any)
+    setTheme(theme === "dark" ? "light" : "dark")
   }
 
   return (
@@ -44,13 +44,13 @@ export function ThemeToggle() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => setTheme("light" as any)}>
+          <DropdownMenuItem onClick={() => setTheme("light")}>
             Light
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setTheme("dark" as any)}>
+          <DropdownMenuItem onClick={() => setTheme("dark")}>
             Dark
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setTheme("system" as any)}>
+          <DropdownMenuItem onClick={() => setTheme("system")}>
             System
           </DropdownMenuItem>
         </DropdownMenuContent>

@@ -166,7 +166,7 @@ export function RecurringTransactionList({
                       <AlertDialogTitle>Delete Recurring Transaction</AlertDialogTitle>
                       <AlertDialogDescription>
                         Are you sure you want to delete this recurring transaction?
-                        This will stop future transactions from being created, but won't
+                        This will stop future transactions from being created, but won&apos;t
                         delete any existing transactions.
                       </AlertDialogDescription>
                     </AlertDialogHeader>

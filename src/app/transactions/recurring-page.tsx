@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import { RecurringTransactionList } from "@/components/transactions/recurring-transaction-list";
-import { AddRecurringTransactionDialog } from "@/components/transactions/add-recurring-transaction-dialog";
 import { ProcessRecurringTransactions } from "@/components/transactions/process-recurring-transactions";
 import { getRecurringTransactions } from "@/utils/recurring-transactions/actions";
 import { Skeleton } from "@/components/ui/skeleton";

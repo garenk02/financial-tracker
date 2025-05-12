@@ -67,6 +67,7 @@ export async function getUserProfile() {
           data: {
             id: userId,
             email: userEmail,
+            display_name: userEmail || '', // Default to email if available
             preferred_currency: 'usd',
             theme_preference: 'dark' // Default to dark theme as per database schema
           }

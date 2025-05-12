@@ -121,7 +121,7 @@ export function AddRecurringTransactionDialog() {
             <FormField
               control={form.control}
               name="is_income"
-              render={({ field }) => (
+              render={() => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
                   <div className="space-y-0.5">
                     <FormLabel>Transaction Type</FormLabel>
@@ -265,7 +265,7 @@ export function AddRecurringTransactionDialog() {
                   <FormLabel>End Date (Optional)</FormLabel>
                   <FormControl>
                     <SimpleDatePicker
-                      date={field.value || undefined}
+                      date={field.value || ""}
                       setDate={(date) => field.onChange(date)}
                       placeholder="No end date"
                     />

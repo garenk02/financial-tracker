@@ -19,7 +19,6 @@ interface PreferencesFormProps {
 
 export function PreferencesForm({
   defaultCurrency = "usd",
-  defaultTheme = "system",
   className = "",
   isMobile = false
 }: PreferencesFormProps) {
@@ -72,7 +71,7 @@ export function PreferencesForm({
 
       // Apply the selected theme immediately before saving to database
       // This ensures the theme is applied before the page reloads
-      setTheme(selectedTheme as any)
+      setTheme(selectedTheme as "light" | "dark" | "system")
 
       // Store in localStorage to ensure it persists across reloads
       if (typeof window !== 'undefined') {
