@@ -77,10 +77,10 @@ export function AddIncomeDialog() {
 
     try {
       // Log the data being submitted for debugging
-      console.log("Submitting income data:", data)
+      // console.log("Submitting income data:", data)
 
       const result = await addIncome(data)
-      console.log("Server response:", result)
+      // console.log("Server response:", result)
 
       if (result && result.success) {
         toast.success("Income added successfully")

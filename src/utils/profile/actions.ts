@@ -83,11 +83,11 @@ export async function getUserProfile() {
 // Update user preferences
 export async function updateUserPreferences(formData: UserPreferencesFormValues) {
   try {
-    console.log("Received form data:", formData)
+    // console.log("Received form data:", formData)
 
     // Validate form data
     const validatedData = userPreferencesSchema.parse(formData)
-    console.log("Validated data:", validatedData)
+    // console.log("Validated data:", validatedData)
 
     // Create Supabase client
     const supabase = await createActionClient()
@@ -101,7 +101,7 @@ export async function updateUserPreferences(formData: UserPreferencesFormValues)
     }
 
     const userId = user.id
-    console.log("User ID:", userId)
+    // console.log("User ID:", userId)
 
     // Prepare update data
     const updateData = {
@@ -110,11 +110,11 @@ export async function updateUserPreferences(formData: UserPreferencesFormValues)
       updated_at: new Date().toISOString(),
     }
 
-    console.log("Updating preferences for user", userId, ":", updateData)
+    // console.log("Updating preferences for user", userId, ":", updateData)
 
     // Use RPC (Remote Procedure Call) to update the profile
     // This bypasses RLS policies and uses the server-side function
-    const { data, error } = await supabase.rpc('update_user_preferences', {
+    const { error } = await supabase.rpc('update_user_preferences', {
       user_id: userId,
       p_currency: updateData.preferred_currency,
       p_theme: updateData.theme_preference
@@ -125,7 +125,7 @@ export async function updateUserPreferences(formData: UserPreferencesFormValues)
       return { error: "Database error: " + error.message }
     }
 
-    console.log("Successfully updated profile:", data)
+    // console.log("Successfully updated profile:", data)
 
     // Revalidate all pages that might display user preferences
     revalidatePath('/', 'layout')

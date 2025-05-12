@@ -30,10 +30,9 @@ export function PreferencesForm({
   const [selectedCurrency, setSelectedCurrency] = useState<CurrencyCode>("usd")
 
   // Use our custom hook to sync theme with next-themes
-  const { theme, setTheme, resolvedTheme } = useThemeSync(defaultTheme || "system", (newTheme) => {
+  const { theme, setTheme, resolvedTheme } = useThemeSync(defaultTheme || "system", () => {
     // This callback is called when the theme changes in the UI
     // We don't need to update the database here as we'll do it when saving preferences
-    console.log("Theme changed in UI to:", newTheme)
   })
 
   // Get the currency context to update when preferences change
@@ -60,7 +59,7 @@ export function PreferencesForm({
   const handleSubmit = async () => {
     setIsLoading(true)
 
-    console.log("Submitting preferences:", { currency: selectedCurrency, theme })
+    // console.log("Submitting preferences:", { currency: selectedCurrency, theme })
 
     try {
       // Make sure currency is lowercase
@@ -75,7 +74,7 @@ export function PreferencesForm({
         console.error("Error updating preferences:", result.error)
         toast.error("Error: " + result.error)
       } else {
-        console.log("Preferences updated successfully:", result)
+        // console.log("Preferences updated successfully:", result)
 
         // Show success message
         toast.success("Your preferences have been updated")
@@ -90,7 +89,7 @@ export function PreferencesForm({
             headers: { 'Cache-Control': 'no-cache' }
           })
           if (response.ok) {
-            console.log("Successfully refreshed profile data")
+            // console.log("Successfully refreshed profile data")
           }
         } catch (refreshError) {
           console.error("Error refreshing profile:", refreshError)

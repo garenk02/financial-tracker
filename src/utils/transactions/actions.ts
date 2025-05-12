@@ -32,11 +32,11 @@ async function createActionClient() {
 // Add an expense transaction
 export async function addExpense(formData: ExpenseFormValues) {
   try {
-    console.log("Server received expense data:", formData);
+    // console.log("Server received expense data:", formData);
 
     // Validate the form data
     const validatedData = expenseSchema.parse(formData);
-    console.log("Validated expense data:", validatedData);
+    // console.log("Validated expense data:", validatedData);
 
     // Create Supabase client
     const supabase = await createActionClient();
@@ -66,7 +66,7 @@ export async function addExpense(formData: ExpenseFormValues) {
       tags: validatedData.tags || [],
     };
 
-    console.log("Preparing to insert transaction:", transactionData);
+    // console.log("Preparing to insert transaction:", transactionData);
 
     // Insert the transaction and return with category data
     const { data, error } = await supabase
@@ -90,7 +90,7 @@ export async function addExpense(formData: ExpenseFormValues) {
     revalidatePath('/transactions');
     revalidatePath('/');
 
-    console.log("Transaction added successfully:", data);
+    // console.log("Transaction added successfully:", data);
     return { success: true, data };
   } catch (error) {
     console.error("Server error in addExpense:", error);
@@ -111,11 +111,11 @@ export async function addExpense(formData: ExpenseFormValues) {
 // Add an income transaction
 export async function addIncome(formData: IncomeFormValues) {
   try {
-    console.log("Server received income data:", formData);
+    // console.log("Server received income data:", formData);
 
     // Validate the form data
     const validatedData = incomeSchema.parse(formData);
-    console.log("Validated income data:", validatedData);
+    // console.log("Validated income data:", validatedData);
 
     // Create Supabase client
     const supabase = await createActionClient();
@@ -145,7 +145,7 @@ export async function addIncome(formData: IncomeFormValues) {
       tags: validatedData.tags || [],
     };
 
-    console.log("Preparing to insert transaction:", transactionData);
+    // console.log("Preparing to insert transaction:", transactionData);
 
     // Insert the transaction and return with category data
     const { data, error } = await supabase
@@ -169,7 +169,7 @@ export async function addIncome(formData: IncomeFormValues) {
     revalidatePath('/transactions');
     revalidatePath('/');
 
-    console.log("Transaction added successfully:", data);
+    // console.log("Transaction added successfully:", data);
     return { success: true, data };
   } catch (error) {
     console.error("Server error in addIncome:", error);

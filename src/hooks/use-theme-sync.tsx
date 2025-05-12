@@ -10,7 +10,7 @@ export function useThemeSync(defaultTheme: string, onThemeChange?: (theme: strin
   // Set the theme from database when component mounts
   useEffect(() => {
     if (defaultTheme && !initialThemeSet) {
-      console.log("Setting theme from database:", defaultTheme)
+      // console.log("Setting theme from database:", defaultTheme)
       setTheme(defaultTheme)
       setInitialThemeSet(true)
     }
@@ -19,7 +19,7 @@ export function useThemeSync(defaultTheme: string, onThemeChange?: (theme: strin
   // Update when theme changes
   useEffect(() => {
     if (theme && initialThemeSet) {
-      console.log("Theme changed:", theme)
+      // console.log("Theme changed:", theme)
 
       // Call the callback if provided
       if (onThemeChange) {

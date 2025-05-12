@@ -13,7 +13,7 @@ export function CurrencyInitializer({
   // Set the initial currency from server-side props
   useEffect(() => {
     if (initialCurrency) {
-      console.log("Setting initial currency from server props:", initialCurrency)
+      // console.log("Setting initial currency from server props:", initialCurrency)
       setCurrencyCode(initialCurrency.toLowerCase() as CurrencyCode)
     }
   }, [initialCurrency, setCurrencyCode])

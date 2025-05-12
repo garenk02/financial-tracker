@@ -77,10 +77,10 @@ export function AddExpenseDialog() {
 
     try {
       // Log the data being submitted for debugging
-      console.log("Submitting expense data:", data)
+      // console.log("Submitting expense data:", data)
 
       const result = await addExpense(data)
-      console.log("Server response:", result)
+      // console.log("Server response:", result)
 
       if (result && result.success) {
         toast.success("Expense added successfully")
