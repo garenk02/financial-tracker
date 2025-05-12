@@ -3,6 +3,7 @@ import { TabsContent } from "@/components/ui/tabs";
 import { protectRoute } from "@/utils/auth/protected-route";
 import { AddExpenseDialog } from "@/components/transactions/add-expense-dialog";
 import { AddIncomeDialog } from "@/components/transactions/add-income-dialog";
+import { AddRecurringTransactionDialog } from "@/components/transactions/add-recurring-transaction-dialog";
 import { TransactionList } from "@/components/transactions/transaction-list";
 import { TransactionListSkeleton } from "@/components/transactions/transaction-list-skeleton";
 import { getTransactions } from "@/utils/transactions/actions";
@@ -10,6 +11,7 @@ import { Suspense } from "react";
 
 // Client component for the transactions page tabs
 import TransactionsTabsClient from "./tabs-client";
+import RecurringTransactionsPage from "./recurring-page";
 
 export default async function TransactionsPage({
   searchParams: searchParamsPromise,
@@ -77,6 +79,7 @@ export default async function TransactionsPage({
           <div className="flex gap-2 self-stretch md:self-auto">
             <AddExpenseDialog />
             <AddIncomeDialog />
+            <AddRecurringTransactionDialog />
           </div>
         </div>
 
@@ -104,6 +107,10 @@ export default async function TransactionsPage({
                 searchQuery={search}
                 hasMore={pagination.page < pagination.totalPages}
               />
+            </TabsContent>
+
+            <TabsContent value="recurring" className="mt-4">
+              <RecurringTransactionsPage />
             </TabsContent>
           </TransactionsTabsClient>
         </Suspense>

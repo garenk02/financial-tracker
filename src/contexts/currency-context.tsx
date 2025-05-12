@@ -231,6 +231,10 @@ export function CurrencyProvider({
   }, [loadUserCurrency, initialCurrencyCode, setCurrencyCode, logger, pathname])
 
   const formatCurrency = (amount: number) => {
+    // Handle undefined, null, or NaN values
+    if (amount === undefined || amount === null || isNaN(amount)) {
+      return currency.format(0)
+    }
     return currency.format(amount)
   }
 

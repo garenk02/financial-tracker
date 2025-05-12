@@ -3,9 +3,12 @@ import { Button } from "@/components/ui/button";
 import { protectRoute } from "@/utils/auth/protected-route";
 import { AddExpenseDialog } from "@/components/transactions/add-expense-dialog";
 import { AddIncomeDialog } from "@/components/transactions/add-income-dialog";
+import { AddRecurringTransactionDialog } from "@/components/transactions/add-recurring-transaction-dialog";
+import { ProcessRecurringTransactions } from "@/components/transactions/process-recurring-transactions";
 import { MobileSummaryCard, SummaryCards } from "@/components/dashboard/summary-cards";
 import { RecentTransactions } from "@/components/dashboard/recent-transactions";
 import { ExpenseChart } from "@/components/dashboard/expense-chart";
+import { RecurringTransactionProcessor } from "@/components/dashboard/recurring-transaction-processor";
 import {
   getRecentTransactions,
   getCurrentBalance,
@@ -68,6 +71,9 @@ export default async function Home() {
 
   return (
     <MainLayout>
+      {/* Invisible component that processes recurring transactions */}
+      <RecurringTransactionProcessor />
+
       <div className="container py-4 md:py-8 px-4 md:px-6">
         <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6">Financial Dashboard</h1>
 
@@ -113,9 +119,13 @@ export default async function Home() {
         {/* Quick Actions for Mobile */}
         <div className="md:hidden mt-6">
           <h2 className="text-xl font-bold mb-3">Quick Actions</h2>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3 mb-3">
             <AddExpenseDialog />
             <AddIncomeDialog />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <AddRecurringTransactionDialog />
+            <ProcessRecurringTransactions />
           </div>
         </div>
       </div>

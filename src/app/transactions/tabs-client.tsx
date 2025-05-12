@@ -21,12 +21,12 @@ export default function TransactionsTabsClient({
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString())
       params.set(name, value)
-      
+
       // Reset page when changing tabs
       if (name === "tab") {
         params.set("page", "1")
       }
-      
+
       return params.toString()
     },
     [searchParams]
@@ -39,10 +39,11 @@ export default function TransactionsTabsClient({
 
   return (
     <Tabs defaultValue={initialTab} onValueChange={handleTabChange}>
-      <TabsList className="grid w-full grid-cols-3 mb-4">
+      <TabsList className="grid w-full grid-cols-4 mb-4">
         <TabsTrigger value="all">All</TabsTrigger>
         <TabsTrigger value="income">Income</TabsTrigger>
         <TabsTrigger value="expenses">Expenses</TabsTrigger>
+        <TabsTrigger value="recurring">Recurring</TabsTrigger>
       </TabsList>
       {children}
     </Tabs>

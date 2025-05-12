@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { formatDistanceToNow } from "date-fns"
-import { Goal as GoalIcon } from "lucide-react"
+import { Goal as GoalIcon, Trash2 } from "lucide-react"
 import { Goal } from "@/types/goals"
 import { toast } from "sonner"
 
@@ -13,6 +13,17 @@ import { EditGoalDialog } from "./edit-goal-dialog"
 import { AddFundsDialog } from "./add-funds-dialog"
 import { deleteGoal } from "@/utils/goals/actions"
 import { FormattedCurrency } from "@/components/ui/formatted-currency"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 interface GoalCardProps {
   goal: Goal;
@@ -51,21 +62,19 @@ export function GoalCard({ goal, onUpdate }: GoalCardProps) {
 
   // Handle delete
   const handleDelete = async () => {
-    if (confirm("Are you sure you want to delete this goal?")) {
-      setIsDeleting(true)
-      try {
-        const result = await deleteGoal(goal.id)
-        if (result.success) {
-          toast.success("Goal deleted successfully")
-          onUpdate()
-        } else if (result.error) {
-          toast.error(result.error)
-        }
-      } catch {
-        toast.error("Failed to delete goal")
-      } finally {
-        setIsDeleting(false)
+    setIsDeleting(true)
+    try {
+      const result = await deleteGoal(goal.id)
+      if (result.success) {
+        toast.success("Goal deleted successfully")
+        onUpdate()
+      } else if (result.error) {
+        toast.error(result.error)
       }
+    } catch {
+      toast.error("Failed to delete goal")
+    } finally {
+      setIsDeleting(false)
     }
   }
 
@@ -129,15 +138,36 @@ export function GoalCard({ goal, onUpdate }: GoalCardProps) {
       <CardFooter className="flex flex-wrap gap-2 justify-between pt-2">
         <div className="flex gap-2">
           <EditGoalDialog goal={goal} onSuccess={onUpdate} />
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleDelete}
-            disabled={isDeleting}
-            className="text-xs sm:text-sm"
-          >
-            {isDeleting ? "Deleting..." : "Delete"}
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-xs sm:text-sm"
+              >
+                <Trash2 className="h-3.5 w-3.5 mr-1" />
+                Delete
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="sm:max-w-[425px]">
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete Goal</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to delete this goal? This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="flex flex-col-reverse sm:flex-row gap-2">
+                <AlertDialogCancel className="mt-0">Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                  className="bg-destructive hover:bg-destructive/90"
+                >
+                  {isDeleting ? "Deleting..." : "Delete Goal"}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
         <AddFundsDialog goalId={goal.id} goalName={goal.name} onSuccess={onUpdate} />
       </CardFooter>
