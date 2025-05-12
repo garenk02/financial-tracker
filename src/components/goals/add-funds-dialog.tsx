@@ -45,7 +45,7 @@ export function AddFundsDialog({ goalId, goalName, onSuccess }: AddFundsDialogPr
     resolver: zodResolver(addFundsSchema),
     defaultValues: {
       goal_id: goalId,
-      amount: 0,
+      amount: undefined,
     },
   })
 
@@ -58,7 +58,7 @@ export function AddFundsDialog({ goalId, goalName, onSuccess }: AddFundsDialogPr
 
       if (result.success) {
         toast.success("Funds added successfully")
-        form.reset({ goal_id: goalId, amount: 0 })
+        form.reset({ goal_id: goalId, amount: undefined })
         setOpen(false)
 
         // Force an immediate refresh to update the UI with the latest data
@@ -107,7 +107,8 @@ export function AddFundsDialog({ goalId, goalName, onSuccess }: AddFundsDialogPr
                     <CurrencyInput
                       value={field.value}
                       onChange={field.onChange}
-                      min={0.01}
+                      min={100}
+                      placeholder="Enter amount to add"
                     />
                   </FormControl>
                   <FormDescription>

@@ -48,11 +48,11 @@ export async function getRecentTransactions(limit = 5) {
         description,
         date,
         is_income,
-        categories (
+        category_id,
+        categories:category_id (
           id,
           name,
-          color,
-          icon
+          color
         )
       `)
       .eq('user_id', user.id)
@@ -64,7 +64,14 @@ export async function getRecentTransactions(limit = 5) {
       return { error: error.message }
     }
 
-    return { success: true, data }
+    // Transform the data to ensure categories is properly structured
+    const transformedData = data.map((transaction) => ({
+      ...transaction,
+      // Convert categories from object to expected format
+      categories: transaction.categories || null
+    }))
+
+    return { success: true, data: transformedData }
   } catch (error) {
     console.error("Failed to fetch recent transactions:", error)
     return { error: "Failed to fetch recent transactions" }
@@ -208,7 +215,8 @@ export async function getExpenseBreakdown() {
       .from('transactions')
       .select(`
         amount,
-        categories (
+        category_id,
+        categories:category_id (
           id,
           name,
           color
@@ -219,6 +227,8 @@ export async function getExpenseBreakdown() {
       .gte('date', startOfMonth)
       .lte('date', endOfMonth)
 
+    // Process the transaction data
+
     if (error) {
       console.error("Error fetching expense breakdown:", error)
       return { error: error.message }
@@ -227,12 +237,29 @@ export async function getExpenseBreakdown() {
     // Group by category
     const categoryMap = new Map()
 
-    data.forEach(transaction => {
-      if (!transaction.categories || !transaction.categories.length) return
+    // Process the data
+    data.forEach((transaction) => {
+      // Skip if no category
+      if (!transaction.categories) {
+        // Add to "Uncategorized" category
+        const uncategorizedId = "uncategorized"
+        if (!categoryMap.has(uncategorizedId)) {
+          categoryMap.set(uncategorizedId, {
+            id: uncategorizedId,
+            name: "Uncategorized",
+            color: "#94a3b8", // slate-400
+            amount: 0
+          })
+        }
+        categoryMap.get(uncategorizedId).amount += transaction.amount
+        return
+      }
 
-      const categoryId = transaction.categories[0].id
-      const categoryName = transaction.categories[0].name
-      const categoryColor = transaction.categories[0].color
+      // Get category data - using type assertion to handle the structure
+      const category = transaction.categories as unknown as { id: string; name: string; color?: string }
+      const categoryId = category.id || 'unknown'
+      const categoryName = category.name || 'Unknown'
+      const categoryColor = category.color || "#94a3b8" // Default color if none
 
       if (!categoryMap.has(categoryId)) {
         categoryMap.set(categoryId, {
@@ -301,12 +328,11 @@ export async function getCategoryBudgetsWithSpending() {
         id,
         allocated_amount,
         category_id,
-        categories (
+        categories:category_id (
           id,
           name,
           type,
-          color,
-          icon
+          color
         )
       `)
       .eq('budget_id', budgetData.id)
@@ -349,9 +375,9 @@ export async function getCategoryBudgetsWithSpending() {
     }, {})
 
     // Add spending data to category budgets
-    const enhancedCategoryBudgets = categoryBudgets.map(budget => ({
+    const enhancedCategoryBudgets = categoryBudgets.map((budget) => ({
       ...budget,
-      spent: spendingByCategory[budget.categories && budget.categories.length > 0 ? budget.categories[0].id : ''] || 0
+      spent: spendingByCategory[budget.category_id] || 0
     }))
 
     return {

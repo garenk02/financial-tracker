@@ -101,7 +101,7 @@ interface SummaryCardsProps {
 
 export function SummaryCards({ balance, budgetData, isLoading = false }: SummaryCardsProps) {
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       <BalanceCard balance={balance} isLoading={isLoading} />
       <BudgetCard
         spent={budgetData.spent}
@@ -117,7 +117,7 @@ export function SummaryCards({ balance, budgetData, isLoading = false }: Summary
 export function MobileSummaryCard({ balance, budgetData, isLoading = false }: SummaryCardsProps) {
   if (isLoading) {
     return (
-      <Card className="mb-4 md:hidden">
+      <Card className="mt-4 mb-4 md:hidden">
         <CardHeader className="pb-2">
           <CardTitle>Summary</CardTitle>
         </CardHeader>
@@ -129,20 +129,12 @@ export function MobileSummaryCard({ balance, budgetData, isLoading = false }: Su
   }
 
   return (
-    <Card className="mb-4 md:hidden">
+    <Card className="mt-4 mb-4 md:hidden">
       <CardHeader className="pb-2">
         <CardTitle>Summary</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          <div>
-            <div className="flex justify-between items-center">
-              <p className="text-sm font-medium">Current Balance</p>
-              <p className={`text-lg font-bold ${balance < 0 ? "text-red-500" : ""}`}>
-                <FormattedCurrency amount={balance} />
-              </p>
-            </div>
-          </div>
+        <div className="space-y-2">
           <div>
             <div className="flex justify-between items-center mb-1">
               <p className="text-sm font-medium">Monthly Budget</p>
@@ -151,6 +143,14 @@ export function MobileSummaryCard({ balance, budgetData, isLoading = false }: Su
               </p>
             </div>
             <Progress value={budgetData.percentage} className="h-2" />
+          </div>
+          <div>
+            <div className="flex justify-between items-center">
+              <p className="text-sm font-medium">Current Balance</p>
+              <p className={`text-lg font-bold ${balance < 0 ? "text-red-500" : ""}`}>
+                <FormattedCurrency amount={balance} />
+              </p>
+            </div>
           </div>
         </div>
       </CardContent>

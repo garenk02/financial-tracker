@@ -351,7 +351,7 @@ export async function addFundsToGoal(formData: AddFundsFormValues) {
       amount: validatedData.amount,
       description: `Contribution to goal: ${goalData.name}`,
       date: new Date().toISOString().split('T')[0],
-      is_income: false, // This is an expense (money allocated to a goal)
+      is_income: true, // This should be true for adding funds to a goal
       tags: ['goal_contribution', `goal:${validatedData.goal_id}`],
     }
 

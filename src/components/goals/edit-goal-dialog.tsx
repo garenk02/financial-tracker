@@ -26,6 +26,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { CurrencyInput } from "@/components/ui/currency-input"
 import { SimpleDatePicker } from "@/components/ui/simple-date-picker"
 import { Switch } from "@/components/ui/switch"
 
@@ -118,12 +119,11 @@ export function EditGoalDialog({ goal, onSuccess }: EditGoalDialogProps) {
                 <FormItem>
                   <FormLabel>Target Amount</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      inputMode="decimal"
-                      {...field}
-                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                    <CurrencyInput
+                      value={field.value}
+                      onChange={field.onChange}
+                      min={100}
+                      placeholder="Enter target amount"
                     />
                   </FormControl>
                   <FormMessage />
@@ -138,12 +138,12 @@ export function EditGoalDialog({ goal, onSuccess }: EditGoalDialogProps) {
                 <FormItem>
                   <FormLabel>Current Amount</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      inputMode="decimal"
-                      {...field}
-                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                    <CurrencyInput
+                      value={field.value}
+                      onChange={field.onChange}
+                      allowZero={true}
+                      min={0}
+                      placeholder="0"
                     />
                   </FormControl>
                   <FormMessage />
@@ -218,15 +218,12 @@ export function EditGoalDialog({ goal, onSuccess }: EditGoalDialogProps) {
                   <FormItem>
                     <FormLabel>Monthly Contribution (Optional)</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        step="0.01"
-                        placeholder="0.00"
-                        {...field}
-                        value={field.value === undefined ? "" : field.value}
-                        onChange={(e) =>
-                          field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)
-                        }
+                      <CurrencyInput
+                        value={field.value}
+                        onChange={field.onChange}
+                        allowZero={true}
+                        min={0}
+                        placeholder="Enter monthly amount"
                       />
                     </FormControl>
                     <FormDescription>

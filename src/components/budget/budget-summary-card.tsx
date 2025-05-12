@@ -63,7 +63,7 @@ export function BudgetSummaryCard({
           <Progress value={allocationPercentage} className="h-2" />
           <p className="text-xs text-muted-foreground mt-1">
             {unallocatedAmount > 0
-              ? `$${unallocatedAmount.toFixed(2)} unallocated`
+              ? <><FormattedCurrency amount={unallocatedAmount} /> unallocated</>
               : "All budget allocated"}
           </p>
         </div>

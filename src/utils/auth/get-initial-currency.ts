@@ -15,7 +15,7 @@ export async function getInitialCurrency(): Promise<string> {
     const { data: { user }, error: userError } = await supabase.auth.getUser()
 
     if (userError || !user) {
-      console.log("No authenticated user found, using default currency")
+      // console.log("No authenticated user found, using default currency")
       return "usd"
     }
 

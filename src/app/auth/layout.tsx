@@ -42,7 +42,7 @@ export default function AuthLayout({
       {/* Simple footer */}
       <footer className="border-t py-4 text-center text-sm text-muted-foreground">
         <div className="container">
-          <p>© {new Date().getFullYear()} Financial Tracker. All rights reserved.</p>
+          <p>Financial Tracker © {new Date().getFullYear()}. All rights reserved.</p>
         </div>
       </footer>
     </div>

@@ -1,6 +1,7 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from "react"
+import { usePathname } from "next/navigation"
 
 // Define currency types and formats
 export type CurrencyCode = "usd" | "eur" | "gbp" | "jpy" | "idr" | string
@@ -74,6 +75,7 @@ export function CurrencyProvider({
   children,
   initialCurrencyCode = "usd"
 }: CurrencyProviderProps) {
+  const pathname = usePathname()
   const [currency, setCurrency] = useState<CurrencyInfo>(getDefaultCurrency(initialCurrencyCode))
 
   const setCurrencyCode = useCallback((code: CurrencyCode) => {
@@ -99,7 +101,14 @@ export function CurrencyProvider({
   // Function to load user's currency preference
   const loadUserCurrency = useCallback(async () => {
     try {
-      logger.log("Loading user currency preference...")
+      // Skip API call if we're on an auth-related route
+      if (pathname && pathname.startsWith('/auth')) {
+        // logger.log("Skipping profile API call on auth route:", pathname)
+        setCurrencyCode(initialCurrencyCode)
+        return
+      }
+
+      // logger.log("Loading user currency preference...")
       // Use the API endpoint instead of the server action
       const response = await fetch('/api/profile', {
         method: 'GET',
@@ -134,7 +143,7 @@ export function CurrencyProvider({
 
       if (profile?.preferred_currency) {
         const currencyCode = profile.preferred_currency.toLowerCase() as CurrencyCode
-        logger.log("Loaded currency from profile:", currencyCode)
+        // logger.log("Loaded currency from profile:", currencyCode)
 
         // Check if the currency is valid
         if (Object.keys(CURRENCIES).includes(currencyCode)) {
@@ -148,7 +157,7 @@ export function CurrencyProvider({
     } catch (error) {
       logger.error("Failed to load user currency preference:", error)
     }
-  }, [initialCurrencyCode, setCurrencyCode, logger]);
+  }, [initialCurrencyCode, setCurrencyCode, logger, pathname]);
 
   // Load currency preference when component mounts
   useEffect(() => {
@@ -187,6 +196,13 @@ export function CurrencyProvider({
       // Also check auth state on initial load
       const checkInitialAuth = async () => {
         try {
+          // Skip API calls if we're on an auth-related route
+          if (pathname && pathname.startsWith('/auth')) {
+            logger.log("Skipping auth check on auth route:", pathname)
+            setCurrencyCode(initialCurrencyCode)
+            return
+          }
+
           // Check if we have a Supabase client available
           const { createClient } = await import('@/utils/supabase/client')
           const supabase = createClient()
@@ -196,7 +212,7 @@ export function CurrencyProvider({
             logger.log("User is authenticated on initial load, loading currency preference")
             loadUserCurrency()
           } else {
-            logger.log("No authenticated user found on initial load")
+            // logger.log("No authenticated user found on initial load")
             setCurrencyCode(initialCurrencyCode)
           }
         } catch (error) {
@@ -212,7 +228,7 @@ export function CurrencyProvider({
         window.removeEventListener('storage', handleStorageChange)
       }
     }
-  }, [loadUserCurrency, initialCurrencyCode, setCurrencyCode, logger])
+  }, [loadUserCurrency, initialCurrencyCode, setCurrencyCode, logger, pathname])
 
   const formatCurrency = (amount: number) => {
     return currency.format(amount)

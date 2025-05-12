@@ -3,7 +3,7 @@ import { TabsContent } from "@/components/ui/tabs";
 import { protectRoute } from "@/utils/auth/protected-route";
 import { AddExpenseDialog } from "@/components/transactions/add-expense-dialog";
 import { AddIncomeDialog } from "@/components/transactions/add-income-dialog";
-import { TransactionList, type Transaction } from "@/components/transactions/transaction-list";
+import { TransactionList } from "@/components/transactions/transaction-list";
 import { TransactionListSkeleton } from "@/components/transactions/transaction-list-skeleton";
 import { getTransactions } from "@/utils/transactions/actions";
 import { Suspense } from "react";
@@ -39,18 +39,28 @@ export default async function TransactionsPage({
   });
 
   // Handle data or use defaults
-  const transactions: Transaction[] = transactionsResult.success
-    ? transactionsResult.data.map(t => ({
-        ...t,
-        // Ensure categories is properly formatted as expected by the Transaction type
-        categories: t.categories && t.categories.length > 0 ? {
-          id: t.categories[0].id || '',
-          name: t.categories[0].name || 'Uncategorized',
-          color: t.categories[0].color,
-          icon: t.categories[0].icon
-        } : null
-      }))
-    : [];
+  const rawTransactions = transactionsResult.success ? transactionsResult.data : [];
+
+  // Transform the data to ensure it matches the expected format
+  const transactions = rawTransactions.map(transaction => {
+    // Extract the category data from the transaction
+    // If categories is an array, take the first item, otherwise use as is
+    const categoryData = transaction.categories ?
+      (Array.isArray(transaction.categories) ? transaction.categories[0] : transaction.categories)
+      : null;
+
+    // Create a properly formatted transaction object
+    return {
+      ...transaction,
+      // Ensure categories is an object or null, not an array
+      categories: categoryData ? {
+        id: categoryData.id || '',
+        name: categoryData.name || '',
+        color: categoryData.color || undefined,
+        icon: undefined // The icon property might not exist in the raw data
+      } : null
+    };
+  });
 
   const pagination = transactionsResult.success ? transactionsResult.pagination : {
     page: 1,

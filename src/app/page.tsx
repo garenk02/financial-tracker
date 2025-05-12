@@ -13,6 +13,10 @@ import {
   getExpenseBreakdown
 } from "@/utils/dashboard/actions";
 import Link from "next/link";
+import { Transaction } from "@/types/transactions";
+
+// Define a type for the raw transaction data structure
+type RawTransactionData = Record<string, unknown>;
 
 export default async function Home() {
   // Protect this route - redirects to /auth if not authenticated
@@ -32,7 +36,30 @@ export default async function Home() {
   ]);
 
   // Handle data or use defaults
-  const transactions = transactionsResult.success ? transactionsResult.data : [];
+  // Transform transaction data to match the expected Transaction type
+  const transactions: Transaction[] = transactionsResult.success
+    ? transactionsResult.data.map((item: RawTransactionData) => {
+        const categories = item.categories as { id: string; name: string; color?: string } | null;
+
+        return {
+          id: item.id as string,
+          amount: item.amount as number,
+          description: item.description as string,
+          date: item.date as string,
+          is_income: item.is_income as boolean,
+          category_id: item.category_id as string | undefined,
+          tags: item.tags as string[] | undefined,
+          created_at: item.created_at as string | undefined,
+          // Ensure categories is an object or null, not an array
+          categories: categories ? {
+            id: categories.id,
+            name: categories.name,
+            color: categories.color
+          } : null
+        };
+      })
+    : [];
+
   const balance = balanceResult.success ? balanceResult.balance : 0;
   const budgetData = spendingResult.success
     ? spendingResult.data
@@ -44,14 +71,14 @@ export default async function Home() {
       <div className="container py-4 md:py-8 px-4 md:px-6">
         <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6">Financial Dashboard</h1>
 
-        {/* Summary Card for Mobile */}
-        <MobileSummaryCard
+        {/* Desktop Cards */}
+        <SummaryCards
           balance={balance}
           budgetData={budgetData}
         />
 
-        {/* Desktop Cards */}
-        <SummaryCards
+        {/* Summary Card for Mobile */}
+        <MobileSummaryCard
           balance={balance}
           budgetData={budgetData}
         />
@@ -69,11 +96,7 @@ export default async function Home() {
               <Button variant="outline" size="sm" className="text-xs">View All</Button>
             </Link>
           </div>
-          <RecentTransactions transactions={transactions.map((t: any) => ({
-            ...t,
-            // Ensure categories is a single object or null, not an array
-            categories: t.categories && t.categories.length > 0 ? t.categories[0] : null
-          }))} />
+          <RecentTransactions transactions={transactions} />
         </div>
 
         {/* Mobile layout - stacked */}
@@ -84,21 +107,15 @@ export default async function Home() {
               <Button variant="outline" size="sm" className="text-xs">View All</Button>
             </Link>
           </div>
-          <RecentTransactions transactions={transactions.map((t: any) => ({
-            ...t,
-            // Ensure categories is a single object or null, not an array
-            categories: t.categories && t.categories.length > 0 ? t.categories[0] : null
-          }))} />
+          <RecentTransactions transactions={transactions} />
+        </div>
 
-
-
-          {/* Quick Actions for Mobile */}
-          <div className="mt-6">
-            <h2 className="text-xl font-bold mb-3">Quick Actions</h2>
-            <div className="grid grid-cols-2 gap-3">
-              <AddExpenseDialog />
-              <AddIncomeDialog />
-            </div>
+        {/* Quick Actions for Mobile */}
+        <div className="md:hidden mt-6">
+          <h2 className="text-xl font-bold mb-3">Quick Actions</h2>
+          <div className="grid grid-cols-2 gap-3">
+            <AddExpenseDialog />
+            <AddIncomeDialog />
           </div>
         </div>
       </div>

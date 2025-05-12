@@ -47,7 +47,7 @@ export function AddIncomeDialog() {
   const form = useForm<IncomeFormValues>({
     resolver: zodResolver(incomeSchema),
     defaultValues: {
-      amount: 0,
+      amount: undefined,
       description: "",
       date: new Date().toISOString().split('T')[0], // Format as YYYY-MM-DD
       category_id: "",
@@ -123,7 +123,7 @@ export function AddIncomeDialog() {
                     <CurrencyInput
                       value={field.value}
                       onChange={field.onChange}
-                      min={0.01}
+                      min={100}
                     />
                   </FormControl>
                   <FormMessage />

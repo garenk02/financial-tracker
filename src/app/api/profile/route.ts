@@ -41,7 +41,7 @@ export async function GET() {
       )
     }
 
-    logger.log("User authenticated:", user.id)
+    // logger.log("User authenticated:", user.id)
 
     // Get user profile
     const { data, error } = await supabase

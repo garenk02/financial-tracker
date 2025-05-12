@@ -15,8 +15,8 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE profiles (
     id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
     display_name TEXT,
-    preferred_currency TEXT DEFAULT 'USD',
-    theme_preference TEXT DEFAULT 'light',
+    preferred_currency TEXT DEFAULT 'usd',
+    theme_preference TEXT DEFAULT 'dark',
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );

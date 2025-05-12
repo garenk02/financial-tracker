@@ -1,6 +1,6 @@
 "use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { FormattedCurrency } from "@/components/ui/formatted-currency"
 import { Transaction } from "@/types/transactions"
 
@@ -13,9 +13,9 @@ export function RecentTransactions({ transactions, isLoading = false }: RecentTr
   if (isLoading) {
     return (
       <Card>
-        <CardHeader>
+        {/* <CardHeader>
           <CardTitle>Recent Transactions</CardTitle>
-        </CardHeader>
+        </CardHeader> */}
         <CardContent className="p-0">
           <div className="flex items-center justify-center p-6">
             <p className="text-sm text-muted-foreground">Loading transactions...</p>
@@ -28,9 +28,9 @@ export function RecentTransactions({ transactions, isLoading = false }: RecentTr
   if (!transactions || transactions.length === 0) {
     return (
       <Card>
-        <CardHeader>
+        {/* <CardHeader>
           <CardTitle>Recent Transactions</CardTitle>
-        </CardHeader>
+        </CardHeader> */}
         <CardContent className="p-0">
           <div className="flex items-center justify-center p-6">
             <p className="text-sm text-muted-foreground">No transactions found</p>
@@ -42,17 +42,25 @@ export function RecentTransactions({ transactions, isLoading = false }: RecentTr
 
   return (
     <Card>
-      <CardHeader>
+      {/* <CardHeader>
         <CardTitle>Recent Transactions</CardTitle>
-      </CardHeader>
+      </CardHeader> */}
       <CardContent className="p-0">
         <div className="divide-y">
           {transactions.map((transaction) => (
             <div key={transaction.id} className="flex items-center justify-between p-3 md:p-4">
               <div>
                 <p className="font-medium text-sm md:text-base">{transaction.description}</p>
-                <p className="text-xs md:text-sm text-muted-foreground">
-                  {formatDate(transaction.date)} • {transaction.categories?.name || "Uncategorized"}
+                <p className="text-xs md:text-sm text-muted-foreground flex items-center gap-1">
+                  <span>{formatDate(transaction.date)}</span>
+                  <span>•</span>
+                  <span
+                    style={{
+                      color: transaction.categories?.color || undefined
+                    }}
+                  >
+                    {transaction.categories?.name || "Uncategorized"}
+                  </span>
                 </p>
               </div>
               <p className={`font-medium text-sm md:text-base ${transaction.is_income ? "text-green-600" : ""}`}>

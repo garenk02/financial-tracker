@@ -53,7 +53,7 @@ export async function addExpense(formData: ExpenseFormValues) {
       return { error: "You must be logged in to add an expense" };
     }
 
-    console.log("User authenticated:", user.id);
+    // console.log("User authenticated:", user.id);
 
     // Prepare transaction data
     const transactionData = {
@@ -68,11 +68,18 @@ export async function addExpense(formData: ExpenseFormValues) {
 
     console.log("Preparing to insert transaction:", transactionData);
 
-    // Insert the transaction
+    // Insert the transaction and return with category data
     const { data, error } = await supabase
       .from('transactions')
       .insert(transactionData)
-      .select();
+      .select(`
+        *,
+        categories:category_id (
+          id,
+          name,
+          color
+        )
+      `);
 
     if (error) {
       console.error("Database error:", error);
@@ -125,7 +132,7 @@ export async function addIncome(formData: IncomeFormValues) {
       return { error: "You must be logged in to add income" };
     }
 
-    console.log("User authenticated:", user.id);
+    // console.log("User authenticated:", user.id);
 
     // Prepare transaction data
     const transactionData = {
@@ -140,11 +147,18 @@ export async function addIncome(formData: IncomeFormValues) {
 
     console.log("Preparing to insert transaction:", transactionData);
 
-    // Insert the transaction
+    // Insert the transaction and return with category data
     const { data, error } = await supabase
       .from('transactions')
       .insert(transactionData)
-      .select();
+      .select(`
+        *,
+        categories:category_id (
+          id,
+          name,
+          color
+        )
+      `);
 
     if (error) {
       console.error("Database error:", error);
@@ -247,11 +261,11 @@ export async function getTransactions({
         is_income,
         tags,
         created_at,
-        categories (
+        category_id,
+        categories:category_id (
           id,
           name,
-          color,
-          icon
+          color
         )
       `)
       .eq('user_id', user.id)
@@ -278,6 +292,13 @@ export async function getTransactions({
       return { error: error.message }
     }
 
+    // Transform the data to ensure categories is properly structured
+    const transformedData = data.map((transaction) => ({
+      ...transaction,
+      // Convert categories from object to expected format
+      categories: transaction.categories || null
+    }))
+
     // Get total count for pagination
     const { count: totalCount, error: countError } = await supabase
       .from('transactions')
@@ -293,7 +314,7 @@ export async function getTransactions({
 
     return {
       success: true,
-      data,
+      data: transformedData,
       pagination: {
         page,
         limit,

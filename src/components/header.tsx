@@ -29,13 +29,13 @@ export function Header() {
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:flex hidden">
         <div className="container flex h-14 items-center">
           <div className="mr-4 flex">
-            <Link href="/" className="mr-6 flex items-center space-x-2 pl-2">
+            <Link href="/" className="mr-6 flex items-center space-x-2 pl-4">
               <div className="relative w-10 h-10">
                 <Image
                   src="/logo.png"
                   alt="FinTrack Logo"
                   fill
-                  sizes="40px"
+                  sizes="(max-width: 768px) 32px, 40px"
                   className="object-contain"
                   priority
                 />
@@ -66,15 +66,14 @@ export function Header() {
       {/* Mobile Header - Just Logo and Theme Toggle (not sticky) */}
       <header className="relative z-10 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:hidden flex">
         <div className="container flex h-14 items-center justify-between">
-          <Link href="/" className="flex items-center pl-2">
+          <Link href="/" className="flex items-center pl-4">
             <div className="relative w-8 h-8">
               <Image
                 src="/logo.png"
                 alt="FinTrack Logo"
                 fill
-                sizes="32px"
+                sizes="(max-width: 768px) 32px, 40px"
                 className="object-contain"
-                priority
               />
             </div>
           </Link>

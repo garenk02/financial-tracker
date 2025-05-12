@@ -47,7 +47,7 @@ export function AddGoalDialog({ onSuccess }: AddGoalDialogProps) {
     resolver: zodResolver(goalSchema),
     defaultValues: {
       name: "",
-      target_amount: 0,
+      target_amount: undefined,
       current_amount: 0,
       start_date: new Date().toISOString().split('T')[0], // Today
       target_date: new Date(new Date().setMonth(new Date().getMonth() + 3)).toISOString().split('T')[0], // 3 months from now
@@ -122,7 +122,8 @@ export function AddGoalDialog({ onSuccess }: AddGoalDialogProps) {
                     <CurrencyInput
                       value={field.value}
                       onChange={field.onChange}
-                      min={0.01}
+                      min={100}
+                      placeholder="Enter target amount"
                     />
                   </FormControl>
                   <FormMessage />
@@ -141,6 +142,8 @@ export function AddGoalDialog({ onSuccess }: AddGoalDialogProps) {
                       value={field.value}
                       onChange={field.onChange}
                       allowZero={true}
+                      min={0}
+                      placeholder="0"
                     />
                   </FormControl>
                   <FormDescription>
@@ -222,6 +225,8 @@ export function AddGoalDialog({ onSuccess }: AddGoalDialogProps) {
                         value={field.value}
                         onChange={field.onChange}
                         allowZero={true}
+                        min={0}
+                        placeholder="Enter monthly amount"
                       />
                     </FormControl>
                     <FormDescription>

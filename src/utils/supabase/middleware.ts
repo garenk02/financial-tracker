@@ -46,7 +46,7 @@ export async function updateSession(request: NextRequest) {
   if (error) {
     console.error("Error in middleware getting user:", error)
   } else if (data?.user) {
-    console.log("Middleware: User authenticated", data.user.id)
+    // console.log("Middleware: User authenticated", data.user.id)
   } else {
     console.log("Middleware: No user found")
   }

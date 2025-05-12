@@ -36,14 +36,14 @@ export default async function SettingsPage() {
     // Make sure we have valid values for currency
     if (profile.preferred_currency) {
       defaultCurrency = profile.preferred_currency.toLowerCase();
-      console.log("Using currency from profile:", defaultCurrency);
+      // console.log("Using currency from profile:", defaultCurrency);
     }
 
     // Make sure we have valid values for theme
     if (profile.theme_preference &&
         ["light", "dark", "system"].includes(profile.theme_preference)) {
       defaultTheme = profile.theme_preference;
-      console.log("Using theme from profile:", defaultTheme);
+      // console.log("Using theme from profile:", defaultTheme);
     } else {
       console.log("Invalid theme value in profile, defaulting to system");
     }
@@ -51,10 +51,10 @@ export default async function SettingsPage() {
     console.log("No profile data found, using defaults");
   }
 
-  console.log("Using preferences:", {
-    currency: defaultCurrency,
-    theme: defaultTheme
-  });
+  // console.log("Using preferences:", {
+  //   currency: defaultCurrency,
+  //   theme: defaultTheme
+  // });
   return (
     <MainLayout>
       <div className="container py-4 md:py-8 px-4 md:px-6">

@@ -220,7 +220,13 @@ export function TransactionList({
                     <div className="flex flex-wrap items-center gap-x-2 text-xs md:text-sm text-muted-foreground">
                       <span>{formatDate(transaction.date)}</span>
                       <span>•</span>
-                      <span>{transaction.categories?.name || "Uncategorized"}</span>
+                      <span
+                        style={{
+                          color: transaction.categories?.color || undefined
+                        }}
+                      >
+                        {transaction.categories?.name || "Uncategorized"}
+                      </span>
                       {transaction.tags && transaction.tags.length > 0 && (
                         <>
                           <span>•</span>
