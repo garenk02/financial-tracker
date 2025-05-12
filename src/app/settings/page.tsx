@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { getUserProfile } from "@/utils/profile/actions";
 import { PreferencesForm } from "@/components/settings/preferences-form";
+import { ProfileForm } from "@/components/settings/profile-form";
 
 export default async function SettingsPage() {
   // Protect this route - redirects to /auth if not authenticated
@@ -74,17 +75,11 @@ export default async function SettingsPage() {
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-4 pb-4 pt-0">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="mobile-name">Name</Label>
-                    <Input id="mobile-name" placeholder="Your name" defaultValue="John Doe" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="mobile-email">Email</Label>
-                    <Input id="mobile-email" type="email" placeholder="Your email" defaultValue="john.doe@example.com" />
-                  </div>
-                  <Button className="w-full">Save Changes</Button>
-                </div>
+                <ProfileForm
+                  defaultName={profile?.display_name || ""}
+                  defaultEmail={profile?.email || ""}
+                  isMobile={true}
+                />
               </AccordionContent>
             </AccordionItem>
 
@@ -201,16 +196,11 @@ export default async function SettingsPage() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
-                <Input id="name" placeholder="Your name" defaultValue="John Doe" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="Your email" defaultValue="john.doe@example.com" />
-              </div>
-              <Button>Save Changes</Button>
+            <CardContent>
+              <ProfileForm
+                defaultName={profile?.display_name || ""}
+                defaultEmail={profile?.email || ""}
+              />
             </CardContent>
           </Card>
 

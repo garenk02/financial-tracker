@@ -56,6 +56,7 @@ export async function GET() {
         return NextResponse.json({
           data: {
             id: user.id,
+            email: user.email,
             preferred_currency: 'usd',
             theme_preference: 'dark' // Default to dark theme as per database schema
           }
@@ -68,7 +69,13 @@ export async function GET() {
       )
     }
 
-    return NextResponse.json({ data })
+    // Add email to the profile data
+    return NextResponse.json({
+      data: {
+        ...data,
+        email: user.email
+      }
+    })
   } catch (error) {
     logger.error("Error in profile API route:", error)
     // Return a more detailed error message in development
