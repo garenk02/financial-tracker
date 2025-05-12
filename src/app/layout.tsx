@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { CurrencyProvider } from "@/contexts/currency-context";
 import { CurrencyInitializer } from "@/components/currency-initializer";
 import { getInitialCurrency } from "@/utils/auth/get-initial-currency";
+import { Analytics } from '@vercel/analytics/next';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -62,6 +63,7 @@ export default async function RootLayout({
           <CurrencyProvider initialCurrencyCode={initialCurrency}>
             <CurrencyInitializer initialCurrency={initialCurrency} />
             {children}
+            <Analytics />
             <Toaster />
           </CurrencyProvider>
         </ThemeProvider>
