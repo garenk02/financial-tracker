@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { MoonIcon, SunIcon } from "@radix-ui/react-icons"
-import { useTheme } from "next-themes"
+import { useTheme } from "@/contexts/theme-context"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -17,7 +17,7 @@ export function ThemeToggle() {
 
   // Function to toggle between light and dark directly
   const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark")
+    setTheme(theme === "dark" ? "light" : "dark" as any)
   }
 
   return (
@@ -44,13 +44,13 @@ export function ThemeToggle() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => setTheme("light")}>
+          <DropdownMenuItem onClick={() => setTheme("light" as any)}>
             Light
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setTheme("dark")}>
+          <DropdownMenuItem onClick={() => setTheme("dark" as any)}>
             Dark
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setTheme("system")}>
+          <DropdownMenuItem onClick={() => setTheme("system" as any)}>
             System
           </DropdownMenuItem>
         </DropdownMenuContent>

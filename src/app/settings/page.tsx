@@ -30,22 +30,22 @@ export default async function SettingsPage() {
 
   // Default values if profile can't be fetched
   let defaultCurrency = "usd";
-  let defaultTheme = "system";
+  let defaultTheme = "dark"; // Default to dark theme as per database schema
 
   if (profile) {
     // Make sure we have valid values for currency
     if (profile.preferred_currency) {
       defaultCurrency = profile.preferred_currency.toLowerCase();
-      // console.log("Using currency from profile:", defaultCurrency);
+      console.log("Using currency from profile:", defaultCurrency);
     }
 
     // Make sure we have valid values for theme
     if (profile.theme_preference &&
         ["light", "dark", "system"].includes(profile.theme_preference)) {
       defaultTheme = profile.theme_preference;
-      // console.log("Using theme from profile:", defaultTheme);
+      console.log("Using theme from profile:", defaultTheme);
     } else {
-      console.log("Invalid theme value in profile, defaulting to system");
+      console.log("Invalid theme value in profile, defaulting to dark");
     }
   } else {
     console.log("No profile data found, using defaults");

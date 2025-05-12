@@ -59,6 +59,7 @@ export function SignInForm({ onSuccess, onSignUpClick }: SignInFormProps) {
 
       if (error) {
         toast.error(error.message);
+        setIsLoading(false);
         return;
       }
 
@@ -66,14 +67,16 @@ export function SignInForm({ onSuccess, onSignUpClick }: SignInFormProps) {
       onSuccess();
 
       // Navigate to dashboard page after successful sign-in
+      // We don't set isLoading to false here to keep the loading state
+      // until the redirect is complete
       router.push("/");
       router.refresh();
     } catch (error) {
       console.error("Sign in error:", error);
       toast.error("An unexpected error occurred. Please try again.");
-    } finally {
       setIsLoading(false);
     }
+    // Removed the finally block to keep isLoading true during redirect
   }
 
   return (

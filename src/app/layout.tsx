@@ -4,8 +4,10 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { CurrencyProvider } from "@/contexts/currency-context";
+import { ThemeContextProvider } from "@/contexts/theme-context";
 import { CurrencyInitializer } from "@/components/currency-initializer";
 import { getInitialCurrency } from "@/utils/auth/get-initial-currency";
+import { getInitialTheme } from "@/utils/auth/get-initial-theme";
 import { Analytics } from '@vercel/analytics/next';
 
 const geistSans = Geist({
@@ -46,8 +48,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Get the user's currency preference from the server using a server action
+  // Get the user's preferences from the server using server actions
   const initialCurrency = await getInitialCurrency();
+  const initialTheme = await getInitialTheme();
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -56,16 +59,18 @@ export default async function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme={initialTheme || "dark"}
           enableSystem
           disableTransitionOnChange
         >
-          <CurrencyProvider initialCurrencyCode={initialCurrency}>
-            <CurrencyInitializer initialCurrency={initialCurrency} />
-            {children}
-            <Analytics />
-            <Toaster />
-          </CurrencyProvider>
+          <ThemeContextProvider initialTheme={initialTheme as any}>
+            <CurrencyProvider initialCurrencyCode={initialCurrency}>
+              <CurrencyInitializer initialCurrency={initialCurrency} />
+              {children}
+              <Analytics />
+              <Toaster />
+            </CurrencyProvider>
+          </ThemeContextProvider>
         </ThemeProvider>
       </body>
     </html>

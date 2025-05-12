@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { updateUserPreferences } from "@/utils/profile/actions"
 import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
-import { useThemeSync } from "@/hooks/use-theme-sync"
+import { useTheme } from "@/contexts/theme-context"
 import { useCurrency, CurrencyCode, CURRENCIES } from "@/contexts/currency-context"
 
 interface PreferencesFormProps {
@@ -29,17 +29,18 @@ export function PreferencesForm({
   // Initialize with the default currency from props
   const [selectedCurrency, setSelectedCurrency] = useState<CurrencyCode>("usd")
 
-  // Use our custom hook to sync theme with next-themes
-  const { theme, setTheme, resolvedTheme } = useThemeSync(defaultTheme || "system", () => {
-    // This callback is called when the theme changes in the UI
-    // We don't need to update the database here as we'll do it when saving preferences
-  })
+  // Track the selected theme locally to avoid immediate UI changes
+  const [selectedTheme, setSelectedTheme] = useState<string>("dark")
+
+  // Use our theme context
+  const { theme, setTheme, resolvedTheme } = useTheme()
 
   // Get the currency context to update when preferences change
   const { setCurrencyCode } = useCurrency()
 
-  // Set the currency when the component mounts or when defaultCurrency changes
+  // Set the currency and theme when the component mounts
   useEffect(() => {
+    // Set currency from props
     console.log("Setting currency from props:", defaultCurrency)
     if (defaultCurrency) {
       const normalizedCurrency = defaultCurrency.toLowerCase()
@@ -54,27 +55,40 @@ export function PreferencesForm({
       console.log("No currency provided, using USD as default")
       setSelectedCurrency("usd")
     }
-  }, [defaultCurrency])
+
+    // Set selected theme from current theme
+    setSelectedTheme(theme)
+    console.log("Initialized selected theme to:", theme)
+  }, [defaultCurrency, theme])
 
   const handleSubmit = async () => {
     setIsLoading(true)
 
-    // console.log("Submitting preferences:", { currency: selectedCurrency, theme })
+    console.log("Submitting preferences:", { currency: selectedCurrency, theme: selectedTheme })
 
     try {
       // Make sure currency is lowercase
       const currencyToSave = selectedCurrency.toLowerCase() as CurrencyCode
 
+      // Apply the selected theme immediately before saving to database
+      // This ensures the theme is applied before the page reloads
+      setTheme(selectedTheme as any)
+
+      // Store in localStorage to ensure it persists across reloads
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('theme-preference', selectedTheme)
+      }
+
       const result = await updateUserPreferences({
         preferred_currency: currencyToSave,
-        theme_preference: theme
+        theme_preference: selectedTheme
       })
 
       if (result.error) {
         console.error("Error updating preferences:", result.error)
         toast.error("Error: " + result.error)
       } else {
-        // console.log("Preferences updated successfully:", result)
+        console.log("Preferences updated successfully:", result)
 
         // Show success message
         toast.success("Your preferences have been updated")
@@ -82,20 +96,20 @@ export function PreferencesForm({
         // Update the currency context after successful save
         setCurrencyCode(currencyToSave)
 
-        // Fetch the updated profile to ensure the currency is properly loaded
+        // Fetch the updated profile to ensure the preferences are properly loaded
         try {
           const response = await fetch('/api/profile', {
             method: 'GET',
             headers: { 'Cache-Control': 'no-cache' }
           })
           if (response.ok) {
-            // console.log("Successfully refreshed profile data")
+            console.log("Successfully refreshed profile data")
           }
         } catch (refreshError) {
           console.error("Error refreshing profile:", refreshError)
         }
 
-        // Force a page reload to ensure all components use the new currency
+        // Force a page reload to ensure all components use the new settings
         setTimeout(() => {
           window.location.reload()
         }, 1000) // Wait 1 second to show the toast
@@ -133,10 +147,11 @@ export function PreferencesForm({
       <div className="space-y-2">
         <Label htmlFor={`${idPrefix}theme`}>Theme</Label>
         <Select
-          value={theme}
+          value={selectedTheme}
           onValueChange={(value) => {
-            console.log("Setting theme to:", value)
-            setTheme(value)
+            console.log("Selected theme:", value)
+            setSelectedTheme(value)
+            // Don't set the actual theme yet - wait until save
           }}
         >
           <SelectTrigger id={`${idPrefix}theme`} className={isMobile ? "w-full" : ""}>

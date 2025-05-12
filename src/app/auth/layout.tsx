@@ -18,14 +18,14 @@ export default function AuthLayout({
       {/* Simple header with just logo and theme toggle */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex">
         <div className="container flex h-14 items-center justify-between">
-          <Link href="/" className="flex items-center">
+          <Link href="/" className="flex items-center pl-4">
             <div className="relative w-9 h-9 md:w-10 md:h-10">
               <Image
                 src="/logo.png"
                 alt="FinTrack Logo"
                 fill
                 sizes="(max-width: 768px) 36px, 40px"
-                className="object-contain"
+                className="object-contain object-center"
                 priority
               />
             </div>

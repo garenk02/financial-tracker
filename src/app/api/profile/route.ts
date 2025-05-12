@@ -57,7 +57,7 @@ export async function GET() {
           data: {
             id: user.id,
             preferred_currency: 'usd',
-            theme_preference: 'system'
+            theme_preference: 'dark' // Default to dark theme as per database schema
           }
         })
       }

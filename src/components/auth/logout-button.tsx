@@ -24,18 +24,21 @@ export function LogoutButton({ className }: LogoutButtonProps) {
 
       if (error) {
         toast.error(error.message);
+        setIsLoading(false);
         return;
       }
 
       // Redirect to sign-in page
+      // We don't set isLoading to false here to keep the loading state
+      // until the redirect is complete
       router.push("/auth");
       router.refresh();
     } catch (error) {
       console.error("Logout error:", error);
       toast.error("An unexpected error occurred. Please try again.");
-    } finally {
       setIsLoading(false);
     }
+    // Removed the finally block to keep isLoading true during redirect
   };
 
   return (
