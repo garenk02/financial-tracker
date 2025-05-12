@@ -9,6 +9,8 @@ import { CurrencyInitializer } from "@/components/currency-initializer";
 import { getInitialCurrency } from "@/utils/auth/get-initial-currency";
 import { getInitialTheme } from "@/utils/auth/get-initial-theme";
 import { Analytics } from '@vercel/analytics/next';
+import { PWAProvider } from "@/components/pwa/pwa-provider";
+import { PWAInit } from "@/components/pwa/pwa-init";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,13 +27,29 @@ export const metadata: Metadata = {
   description: "A Progressive Web App for personal tracking finances and goals",
   manifest: "/manifest.json",
   icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
+    icon: [
+      { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512x512.png", sizes: "512x512", type: "image/png" },
+      { url: "/logo.png" }
+    ],
+    apple: [
+      { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/logo.png", sizes: "512x512", type: "image/png" }
+    ],
+    shortcut: "/logo.png",
   },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "Financial Tracker",
+  },
+  applicationName: "FinTrack",
+  keywords: ["finance", "budget", "tracker", "goals", "expenses", "income", "pwa"],
+  authors: [{ name: "FinTrack Team" }],
+  creator: "FinTrack",
+  publisher: "FinTrack",
+  formatDetection: {
+    telephone: false,
   },
 };
 
@@ -66,9 +84,12 @@ export default async function RootLayout({
           <ThemeContextProvider initialTheme={initialTheme as "light" | "dark" | "system"}>
             <CurrencyProvider initialCurrencyCode={initialCurrency}>
               <CurrencyInitializer initialCurrency={initialCurrency} />
-              {children}
-              <Analytics />
-              <Toaster />
+              <PWAProvider>
+                <PWAInit />
+                {children}
+                <Analytics />
+                <Toaster />
+              </PWAProvider>
             </CurrencyProvider>
           </ThemeContextProvider>
         </ThemeProvider>
